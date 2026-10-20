@@ -1,0 +1,7 @@
+# robots.txt for astromargdarshan.online
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemaps
+Sitemap: https://www.astromargdarshan.online/sitemap.xml
