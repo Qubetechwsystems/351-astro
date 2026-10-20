@@ -225,6 +225,47 @@ async function handleFormSubmit(event) {
   }
 }
 
+// ================= LIVE SOCIAL PROOF TICKER =================
+function startLiveProofTicker() {
+  const toast = document.getElementById("liveProofToast");
+  const textEl = document.getElementById("liveProofText");
+  const timeEl = document.getElementById("liveProofTime");
+  if (!toast || !textEl || !timeEl) return;
+
+  const proofs = [
+    { name: "संजय माथुर (जयपुर)", action: "ने ₹351 का परामर्श बुक किया", time: "2 मिनट पहले" },
+    { name: "शालिनी कुलश्रेष्ठ (भोपाल)", action: "ने हस्तरेखा विश्लेषण बुक किया", time: "4 मिनट पहले" },
+    { name: "विकास अग्रवाल (कानपुर)", action: "ने करियर परामर्श बुक किया", time: "7 मिनट पहले" },
+    { name: "रोहित तोमर (इंदौर)", action: "ने कुंडली व हस्तरेखा बुक की", time: "11 मिनट पहले" },
+    { name: "अनिता मिश्रा (लखनऊ)", action: "ने ₹351 परामर्श बुक किया", time: "14 मिनट पहले" },
+    { name: "दीपक शर्मा (दिल्ली)", action: "ने विवाह विलंब समाधान बुक किया", time: "18 मिनट पहले" }
+  ];
+
+  let currentIndex = 0;
+
+  function showNextProof() {
+    const item = proofs[currentIndex];
+    textEl.textContent = `${item.name} ${item.action}`;
+    timeEl.textContent = `${item.time} • सत्यापित जातक`;
+
+    toast.classList.remove("opacity-0", "translate-y-4");
+    toast.classList.add("opacity-100", "translate-y-0");
+
+    setTimeout(() => {
+      toast.classList.remove("opacity-100", "translate-y-0");
+      toast.classList.add("opacity-0", "translate-y-4");
+    }, 4500);
+
+    currentIndex = (currentIndex + 1) % proofs.length;
+  }
+
+  setTimeout(() => {
+    showNextProof();
+    setInterval(showNextProof, 12000);
+  }, 3500);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   startCountdown();
+  startLiveProofTicker();
 });
