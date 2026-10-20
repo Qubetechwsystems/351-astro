@@ -6,7 +6,7 @@
 // ================= GLOBAL CONFIGURATION =================
 const APP_CONFIG = {
   RAZORPAY_KEY_ID: "rzp_live_Tof2RpwJEWMNx9",
-  META_PIXEL_ID: "YOUR_PIXEL_ID", // जब आप नई पिक्सल ID देंगे तब यहाँ डल जाएगी
+  META_PIXEL_ID: "1111594184953741", // Astro Margdarshan New Dataset
   CONSULTATION_AMOUNT: 351.00,    // एकमुश्त ₹351 शुभ दक्षिणा
   CURRENCY: "INR",
   BUSINESS_NAME: "वैदिक हस्तरेखा एवं ज्योतिष अनुसंधान केंद्र",
