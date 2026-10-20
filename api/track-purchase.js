@@ -9,8 +9,8 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const PIXEL_ID = '2242280556724298';
-  const ACCESS_TOKEN = 'EAAQFaOjysW8BSnT2Lwf8nDhrDKmWcExxN0DIr2FHwGvBw8H4ZAvmPl7Pq5ZA9liceupcq5xmwZA1q9D3ZBmSEQfAcT4jp2fuivdAubRoIrZAw7QXSfZBtrIx27DZCvg7ipsn5kk6e05BZAhtisWBvn4w2qJTuoaRy3sBx7awN64O4wRnUd1xREZBcGBTdTStoTcnliAZDZD';
+  const PIXEL_ID = '1111594184953741';
+  const ACCESS_TOKEN = 'EAAQFaOjysW8BS4tAD62Nx9ogIoLW5jZBMQdFDFCGPHQOsMyKeeNTbjjeo9cG5m0DUsR3cl9ZAlEkMWeDZBcXmqUysfYZBZBVyTwnhAn0ZBseZA3mTzQI27oW7gZAdvDp1B8RwDiDQINstnfc7ZCIIQe8vPHPHqTrMJ3ZAv5KVTlOvb2FqrxYHJ942luJ3eZAQvhdHYV7AZDZD';
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
           event_name: 'Purchase',
           event_time: Math.floor(Date.now() / 1000),
           action_source: 'website',
-          event_source_url: 'https://astro-landing-page-gold.vercel.app',
+          event_source_url: 'https://www.astromargdarshan.online/',
           event_id: payment_id || ('PAY_' + Date.now()),
           user_data: {
             ph: [hashedPhone],
