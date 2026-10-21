@@ -57,6 +57,26 @@ function toggleFaq(index) {
   }
 }
 
+// ================= HIGH-SPEED ORDER PRE-WARMING (ZERO DELAY) =================
+let preloadedOrderPromise = null;
+
+function prewarmRazorpayOrder() {
+  if (!preloadedOrderPromise) {
+    console.log("⚡ Pre-warming Razorpay order in background...");
+    preloadedOrderPromise = fetch('/api/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'Astro Client', phone: '9116497140', problem: 'general_guidance' })
+    })
+    .then(res => res.json())
+    .catch(err => {
+      console.warn("Prewarm fetch notice:", err);
+      preloadedOrderPromise = null;
+      return null;
+    });
+  }
+}
+
 // ================= BOOKING MODAL CONTROL =================
 function openBookingModal() {
   const modal = document.getElementById("bookingModal");
@@ -69,6 +89,8 @@ function openBookingModal() {
       currency: APP_CONFIG.CURRENCY,
       content_name: '₹351 Palmistry & Kundali Consultation'
     });
+    // ⚡ Pre-warm Razorpay order immediately in background so payment opens with zero delay!
+    prewarmRazorpayOrder();
   }
 }
 
@@ -109,7 +131,7 @@ async function handleFormSubmit(event) {
 
   const payBtn = document.getElementById("payBtn");
   if (payBtn) {
-    payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> सुरक्षित पेमेंट लोड हो रहा है...';
+    payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> <span>सुरक्षित UPI गेटवे खुल रहा है...</span>';
     payBtn.disabled = true;
   }
 
@@ -122,16 +144,23 @@ async function handleFormSubmit(event) {
   });
 
   try {
-    const response = await fetch('/api/create-order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, problem })
-    });
+    // ⚡ Ultra-Fast: Check if preloaded order is already ready
+    let data = null;
+    if (preloadedOrderPromise) {
+      data = await preloadedOrderPromise;
+    }
 
-    const data = await response.json();
+    if (!data || !data.success || !data.order_id) {
+      const response = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, problem })
+      });
+      data = await response.json();
+    }
 
     if (data.success && data.order_id) {
-      console.log("✅ Razorpay ₹351 Order Ready:", data.order_id);
+      console.log("✅ Razorpay ₹351 Order Ready (Instant):", data.order_id);
 
       const problemMap = {
         'marriage_love': 'विवाह में विलंब, वैवाहिक कलह व प्रेम संबंध',
@@ -194,6 +223,7 @@ async function handleFormSubmit(event) {
         },
         modal: {
           ondismiss: function () {
+            preloadedOrderPromise = null;
             if (payBtn) {
               payBtn.disabled = false;
               payBtn.innerHTML = '<i class="fa-solid fa-lock"></i> <span>सुरक्षित भुगतान करें — मात्र ₹351 →</span>';
@@ -205,6 +235,7 @@ async function handleFormSubmit(event) {
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', function (pErr) {
         console.warn("Payment notice:", pErr);
+        preloadedOrderPromise = null;
         if (payBtn) {
           payBtn.disabled = false;
           payBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> <span>पुनः प्रयास करें — ₹351</span>';

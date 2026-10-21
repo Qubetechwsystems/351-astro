@@ -162,7 +162,11 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Razorpay Checkout SDK -->
+  <!-- Razorpay Checkout SDK & High-Speed Preconnects -->
+  <link rel="preconnect" href="https://api.razorpay.com" crossorigin>
+  <link rel="preconnect" href="https://checkout.razorpay.com" crossorigin>
+  <link rel="dns-prefetch" href="https://api.razorpay.com">
+  <link rel="dns-prefetch" href="https://checkout.razorpay.com">
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <!-- Meta Pixel Code (Astro Margdarshan New: 1111594184953741) -->
@@ -1250,8 +1254,14 @@
           </div>
         </div>
 
+        <!-- High-Speed Instant Payment Trust Line -->
+        <div class="flex items-center justify-center gap-2 text-[11px] text-emerald-300 bg-emerald-950/60 border border-emerald-500/30 py-2 px-2.5 rounded-xl text-center">
+          <i class="fa-solid fa-bolt text-yellow-400 text-xs"></i>
+          <span>PhonePe • GPay • Paytm • UPI से <strong>1-क्लिक तुरंत पेमेंट</strong></span>
+        </div>
+
         <!-- Submit Button -->
-        <button type="submit" id="payBtn" class="w-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-gray-950 font-black py-3.5 px-4 rounded-xl text-sm sm:text-base shadow-[0_0_25px_rgba(245,158,11,0.6)] flex items-center justify-center gap-2 mt-3 transition transform hover:scale-[1.02]">
+        <button type="submit" id="payBtn" class="w-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-gray-950 font-black py-3.5 px-4 rounded-xl text-sm sm:text-base shadow-[0_0_25px_rgba(245,158,11,0.6)] flex items-center justify-center gap-2 mt-2 transition transform hover:scale-[1.02]">
           <i class="fa-solid fa-lock"></i>
           <span>सुरक्षित भुगतान करें — मात्र ₹351 →</span>
         </button>
@@ -1283,6 +1293,6 @@
   </div>
 
   <!-- JavaScript Application File with Cache-Buster -->
-  <script src="app.js?v=2.2"></script>
+  <script src="app.js?v=2.3"></script>
 </body>
 </html>
