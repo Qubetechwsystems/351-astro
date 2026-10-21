@@ -57,6 +57,82 @@ function toggleFaq(index) {
   }
 }
 
+// ================= AUTO-SAVE LEAD ON 10-DIGIT PHONE INPUT =================
+let autoSavedLeadKey = "";
+let preloadedOrderData = null;
+
+function setupAutoLeadCapture() {
+  const phoneInput = document.getElementById("custPhone");
+  const nameInput = document.getElementById("custName");
+  const problemInput = document.getElementById("custProblem");
+  if (!phoneInput) return;
+
+  function triggerLeadAutoSave() {
+    const rawPhone = phoneInput.value || "";
+    const cleanPhone = rawPhone.replace(/[^0-9]/g, '').slice(-10);
+
+    if (cleanPhone.length !== 10) return;
+
+    const rawName = (nameInput?.value || "").trim();
+    const name = rawName || "जातक";
+    const problem = problemInput?.value || "general_guidance";
+
+    const leadKey = `${cleanPhone}_${name}_${problem}`;
+    if (leadKey === autoSavedLeadKey) return; // avoid duplicate calls
+    autoSavedLeadKey = leadKey;
+
+    console.log("⚡ Auto-saving lead to Razorpay/Admin backend:", cleanPhone, name);
+
+    fetch('/api/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone: cleanPhone, problem })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success && data.order_id) {
+        preloadedOrderData = {
+          order_id: data.order_id,
+          phone: cleanPhone,
+          name: name,
+          problem: problem,
+          key_id: data.key_id,
+          amount: data.amount,
+          currency: data.currency
+        };
+        console.log("✅ Lead auto-saved in backend & Order preloaded:", data.order_id);
+      }
+    })
+    .catch(err => {
+      console.warn("Auto-save lead note:", err);
+    });
+  }
+
+  // Instant capture as soon as 10th digit is entered
+  phoneInput.addEventListener("input", () => {
+    const cleanPhone = (phoneInput.value || "").replace(/[^0-9]/g, '').slice(-10);
+    if (cleanPhone.length === 10) {
+      triggerLeadAutoSave();
+    }
+  });
+
+  // Also capture when focus leaves phone or name input or problem changes
+  phoneInput.addEventListener("blur", triggerLeadAutoSave);
+  phoneInput.addEventListener("change", triggerLeadAutoSave);
+  if (nameInput) {
+    nameInput.addEventListener("blur", () => {
+      const cleanPhone = (phoneInput.value || "").replace(/[^0-9]/g, '').slice(-10);
+      if (cleanPhone.length === 10) triggerLeadAutoSave();
+    });
+  }
+  if (problemInput) {
+    problemInput.addEventListener("change", () => {
+      const cleanPhone = (phoneInput.value || "").replace(/[^0-9]/g, '').slice(-10);
+      if (cleanPhone.length === 10) triggerLeadAutoSave();
+    });
+  }
+}
+
 // ================= HIGH-SPEED SERVER WARMING (ZERO COLD-START) =================
 function prewarmRazorpayOrder() {
   // Pings serverless function in background so it's blazing fast on submit
@@ -130,14 +206,26 @@ async function handleFormSubmit(event) {
   });
 
   try {
-    // Creates Razorpay Order with Real Customer Details
-    const response = await fetch('/api/create-order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, problem })
-    });
-
-    const data = await response.json();
+    // Check if order was already preloaded from auto-save
+    let data = null;
+    if (preloadedOrderData && preloadedOrderData.phone === phone && preloadedOrderData.order_id) {
+      data = {
+        success: true,
+        order_id: preloadedOrderData.order_id,
+        key_id: preloadedOrderData.key_id || APP_CONFIG.RAZORPAY_KEY_ID,
+        amount: preloadedOrderData.amount || 35100,
+        currency: preloadedOrderData.currency || "INR"
+      };
+      console.log("⚡ Using preloaded Razorpay Order for instant popup:", data.order_id);
+    } else {
+      // Creates Razorpay Order with Real Customer Details
+      const response = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, problem })
+      });
+      data = await response.json();
+    }
 
     if (data.success && data.order_id) {
       console.log("✅ Razorpay ₹351 Order Ready (Instant):", data.order_id);
@@ -279,4 +367,5 @@ function startLiveProofTicker() {
 document.addEventListener("DOMContentLoaded", () => {
   startCountdown();
   startLiveProofTicker();
+  setupAutoLeadCapture();
 });
