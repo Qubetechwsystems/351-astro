@@ -57,24 +57,10 @@ function toggleFaq(index) {
   }
 }
 
-// ================= HIGH-SPEED ORDER PRE-WARMING (ZERO DELAY) =================
-let preloadedOrderPromise = null;
-
+// ================= HIGH-SPEED SERVER WARMING (ZERO COLD-START) =================
 function prewarmRazorpayOrder() {
-  if (!preloadedOrderPromise) {
-    console.log("⚡ Pre-warming Razorpay order in background...");
-    preloadedOrderPromise = fetch('/api/create-order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: 'Astro Client', phone: '9116497140', problem: 'general_guidance' })
-    })
-    .then(res => res.json())
-    .catch(err => {
-      console.warn("Prewarm fetch notice:", err);
-      preloadedOrderPromise = null;
-      return null;
-    });
-  }
+  // Pings serverless function in background so it's blazing fast on submit
+  fetch('/api/create-order?ping=1').catch(() => {});
 }
 
 // ================= BOOKING MODAL CONTROL =================
@@ -89,7 +75,7 @@ function openBookingModal() {
       currency: APP_CONFIG.CURRENCY,
       content_name: '₹351 Palmistry & Kundali Consultation'
     });
-    // ⚡ Pre-warm Razorpay order immediately in background so payment opens with zero delay!
+    // ⚡ Warm up server function in background while user types
     prewarmRazorpayOrder();
   }
 }
@@ -144,20 +130,14 @@ async function handleFormSubmit(event) {
   });
 
   try {
-    // ⚡ Ultra-Fast: Check if preloaded order is already ready
-    let data = null;
-    if (preloadedOrderPromise) {
-      data = await preloadedOrderPromise;
-    }
+    // Creates Razorpay Order with Real Customer Details
+    const response = await fetch('/api/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, problem })
+    });
 
-    if (!data || !data.success || !data.order_id) {
-      const response = await fetch('/api/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, problem })
-      });
-      data = await response.json();
-    }
+    const data = await response.json();
 
     if (data.success && data.order_id) {
       console.log("✅ Razorpay ₹351 Order Ready (Instant):", data.order_id);

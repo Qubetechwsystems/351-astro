@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="hi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astro Margdarshan — गुप्त एडमिन कंट्रोल पैनल</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Yantramanav:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { font-family: 'Yantramanav', sans-serif; background-color: #080314; color: #f8fafc; }
+    .gold-gradient-text { background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#070212]">
+
+  <!-- ================= LOGIN PIN MODAL ================= -->
+  <div id="loginGate" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4">
+    <div class="bg-gradient-to-b from-[#190c2e] to-[#0d051c] border-2 border-amber-500/40 rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-[0_0_50px_rgba(245,158,11,0.3)]">
+      <div class="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-3xl mx-auto mb-4 border border-amber-500/30">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <h2 class="text-xl font-black text-white font-hindi">एडमिन सुरक्षा प्रवेश</h2>
+      <p class="text-xs text-amber-200/80 mt-1 mb-5">लीड्स देखने हेतु 6 अंकों का गुप्त पासवर्ड दर्ज करें</p>
+      
+      <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+        <div>
+          <input type="password" id="adminPinInput" maxlength="6" autofocus placeholder="• • • • • •" class="w-full text-center tracking-[12px] text-2xl font-black bg-[#080313] border-2 border-amber-500/50 rounded-xl px-4 py-3 text-amber-300 focus:outline-none focus:border-amber-400">
+        </div>
+        <p id="loginError" class="text-xs text-rose-400 font-bold hidden">⚠️ गलत पासवर्ड! कृपया पुनः प्रयास करें।</p>
+        <button type="submit" id="loginBtn" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-gray-950 font-black py-3 rounded-xl text-sm transition shadow-lg shadow-amber-500/30">
+          प्रवेश करें →
+        </button>
+      </form>
+      <p class="text-[10px] text-slate-500 mt-4">Astro Margdarshan Internal Control</p>
+    </div>
+  </div>
+
+  <!-- ================= MAIN ADMIN DASHBOARD ================= -->
+  <div id="dashboardApp" class="hidden flex-1 flex flex-col">
+    
+    <!-- Top Bar -->
+    <header class="py-3 px-4 sm:px-6 bg-[#0e0622] border-b border-amber-500/25 sticky top-0 z-30">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-gray-950 font-black flex items-center justify-center text-lg">ॐ</span>
+          <div>
+            <h1 class="text-sm sm:text-base font-black text-white font-hindi">Astro Margdarshan — लीड्स कंट्रोल पैनल</h1>
+            <p class="text-[10px] text-amber-300">गोपनीय जातक विवरण • लाइव सिंक</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="fetchLeadsData(true)" id="refreshBtn" class="bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-arrows-rotate text-xs"></i>
+            <span class="hidden sm:inline">ताज़ा करें</span>
+          </button>
+          <button onclick="exportToCsv()" class="bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-file-excel text-xs"></i>
+            <span class="hidden sm:inline">Excel डाउनलोड</span>
+          </button>
+          <button onclick="handleAdminLogout()" class="bg-rose-950/50 hover:bg-rose-900 border border-rose-500/30 text-rose-300 text-xs px-2.5 py-1.5 rounded-lg transition" title="लॉगआउट">
+            <i class="fa-solid fa-right-from-bracket text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-5">
+      
+      <!-- Metrics Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <!-- Total Leads -->
+        <div class="p-4 rounded-2xl bg-[#120826] border border-amber-500/20">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span>कुल फॉर्म सबमिशन</span>
+            <i class="fa-solid fa-users text-amber-400"></i>
+          </div>
+          <div class="text-2xl sm:text-3xl font-black text-white mt-1" id="statTotalLeads">0</div>
+          <p class="text-[10px] text-amber-300/80 mt-0.5">सभी जातक जिन्होंने फॉर्म खोला</p>
+        </div>
+
+        <!-- Attempted / Pending Leads (Hot follow-up) -->
+        <div class="p-4 rounded-2xl bg-amber-950/30 border border-amber-500/40">
+          <div class="flex items-center justify-between text-xs text-amber-300 font-bold">
+            <span>अधूरे भुगतान (हॉट फॉलो-अप)</span>
+            <i class="fa-solid fa-fire text-amber-400"></i>
+          </div>
+          <div class="text-2xl sm:text-3xl font-black text-amber-400 mt-1" id="statPendingLeads">0</div>
+          <p class="text-[10px] text-slate-300 mt-0.5">WhatsApp पर मैसेज करके कन्वर्ट करें</p>
+        </div>
+
+        <!-- Paid Leads -->
+        <div class="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-500/40">
+          <div class="flex items-center justify-between text-xs text-emerald-300 font-bold">
+            <span>सफल भुगतान (Paid)</span>
+            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+          </div>
+          <div class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1" id="statPaidLeads">0</div>
+          <p class="text-[10px] text-emerald-200 mt-0.5">24 घंटे में रिपोर्ट भेजें</p>
+        </div>
+
+        <!-- Total Revenue -->
+        <div class="p-4 rounded-2xl bg-purple-950/30 border border-purple-500/40">
+          <div class="flex items-center justify-between text-xs text-purple-300 font-bold">
+            <span>अनुमानित आय</span>
+            <i class="fa-solid fa-indian-rupee-sign text-purple-400"></i>
+          </div>
+          <div class="text-2xl sm:text-3xl font-black text-yellow-300 mt-1" id="statRevenue">₹0</div>
+          <p class="text-[10px] text-slate-400 mt-0.5">₹351 प्रति परामर्श</p>
+        </div>
+      </div>
+
+      <!-- Controls & Filter Bar -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#110724] p-3 rounded-2xl border border-amber-500/20">
+        <!-- Search Input -->
+        <div class="relative flex-1">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="searchInput" oninput="applyFilterAndSearch()" placeholder="नाम या 10 अंकों का फोन नंबर खोजें..." class="w-full bg-[#080313] border border-amber-500/30 rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400">
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex items-center gap-1.5 self-center sm:self-auto text-xs">
+          <button onclick="setFilter('all')" id="filterAll" class="px-3 py-1.5 rounded-lg bg-amber-500 text-gray-950 font-bold transition">सभी</button>
+          <button onclick="setFilter('attempted')" id="filterAttempted" class="px-3 py-1.5 rounded-lg bg-[#180a32] text-amber-300 font-medium hover:bg-amber-950/50 transition">अधूरे (Hot)</button>
+          <button onclick="setFilter('paid')" id="filterPaid" class="px-3 py-1.5 rounded-lg bg-[#180a32] text-emerald-300 font-medium hover:bg-emerald-950/50 transition">सफल</button>
+        </div>
+      </div>
+
+      <!-- Leads Table Container -->
+      <div class="bg-[#100624] border border-amber-500/25 rounded-2xl overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[#1a0c36] text-amber-300 border-b border-amber-500/20 font-hindi">
+              <tr>
+                <th class="p-3 font-bold">#</th>
+                <th class="p-3 font-bold">तारीख व समय (IST)</th>
+                <th class="p-3 font-bold">जातक का नाम</th>
+                <th class="p-3 font-bold">WhatsApp नंबर</th>
+                <th class="p-3 font-bold">समस्या / विषय</th>
+                <th class="p-3 font-bold">पेमेंट स्थिति</th>
+                <th class="p-3 font-bold text-center">तुरंत संपर्क (Follow-up)</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody" class="divide-y divide-amber-500/10 text-slate-300">
+              <tr>
+                <td colspan="7" class="p-8 text-center text-slate-400">
+                  <i class="fa-solid fa-spinner fa-spin text-amber-400 text-xl mb-2 block"></i>
+                  लीड्स डेटा लोड हो रहा है...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    const EXPECTED_PIN = "687502";
+    let allLeads = [];
+    let currentFilter = 'all';
+
+    function checkAuth() {
+      const savedPin = sessionStorage.getItem('astro_admin_pin');
+      if (savedPin === EXPECTED_PIN) {
+        document.getElementById('loginGate').classList.add('hidden');
+        document.getElementById('dashboardApp').classList.remove('hidden');
+        fetchLeadsData();
+      } else {
+        document.getElementById('loginGate').classList.remove('hidden');
+        document.getElementById('dashboardApp').classList.add('hidden');
+      }
+    }
+
+    function handleAdminLogin(event) {
+      event.preventDefault();
+      const pin = document.getElementById('adminPinInput').value.trim();
+      const err = document.getElementById('loginError');
+
+      if (pin === EXPECTED_PIN) {
+        err.classList.add('hidden');
+        sessionStorage.setItem('astro_admin_pin', pin);
+        checkAuth();
+      } else {
+        err.classList.remove('hidden');
+        document.getElementById('adminPinInput').value = '';
+        document.getElementById('adminPinInput').focus();
+      }
+    }
+
+    function handleAdminLogout() {
+      sessionStorage.removeItem('astro_admin_pin');
+      location.reload();
+    }
+
+    async function fetchLeadsData(showToast = false) {
+      const pin = sessionStorage.getItem('astro_admin_pin') || EXPECTED_PIN;
+      const refBtn = document.getElementById('refreshBtn');
+      if (refBtn) refBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> <span>लोडिंग...</span>';
+
+      try {
+        const res = await fetch(`/api/admin-leads?pin=${pin}`);
+        const data = await res.json();
+
+        if (data.success && Array.isArray(data.leads)) {
+          allLeads = data.leads;
+          updateMetrics();
+          applyFilterAndSearch();
+          if (showToast) alert("डेटा सफलतापूर्वक अपडेट हो गया!");
+        } else {
+          throw new Error(data.error || "लीड्स नहीं मिल सकीं");
+        }
+      } catch (err) {
+        console.error("Fetch leads error:", err);
+        document.getElementById('leadsTableBody').innerHTML = `
+          <tr><td colspan="7" class="p-6 text-center text-rose-400">
+            ⚠️ त्रुटि: लीड्स लोड नहीं हो सकीं (${err.message})
+          </td></tr>`;
+      } finally {
+        if (refBtn) refBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate text-xs"></i> <span class="hidden sm:inline">ताज़ा करें</span>';
+      }
+    }
+
+    function updateMetrics() {
+      const total = allLeads.length;
+      const paid = allLeads.filter(l => l.status === 'paid').length;
+      const pending = allLeads.filter(l => l.status !== 'paid').length;
+      const revenue = paid * 351;
+
+      document.getElementById('statTotalLeads').textContent = total;
+      document.getElementById('statPaidLeads').textContent = paid;
+      document.getElementById('statPendingLeads').textContent = pending;
+      document.getElementById('statRevenue').textContent = '₹' + revenue.toLocaleString('en-IN');
+    }
+
+    function setFilter(type) {
+      currentFilter = type;
+      ['All', 'Attempted', 'Paid'].forEach(t => {
+        const btn = document.getElementById('filter' + t);
+        if (btn) {
+          btn.className = (t.toLowerCase() === type)
+            ? 'px-3 py-1.5 rounded-lg bg-amber-500 text-gray-950 font-bold transition'
+            : 'px-3 py-1.5 rounded-lg bg-[#180a32] text-slate-300 font-medium hover:bg-amber-950/50 transition';
+        }
+      });
+      applyFilterAndSearch();
+    }
+
+    function applyFilterAndSearch() {
+      const q = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+      let filtered = allLeads;
+
+      if (currentFilter === 'paid') {
+        filtered = filtered.filter(l => l.status === 'paid');
+      } else if (currentFilter === 'attempted') {
+        filtered = filtered.filter(l => l.status !== 'paid');
+      }
+
+      if (q) {
+        filtered = filtered.filter(l => 
+          (l.name && l.name.toLowerCase().includes(q)) || 
+          (l.phone && l.phone.includes(q)) || 
+          (l.problem && l.problem.toLowerCase().includes(q))
+        );
+      }
+
+      renderTable(filtered);
+    }
+
+    function renderTable(leads) {
+      const tbody = document.getElementById('leadsTableBody');
+      if (!leads || leads.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400">कोई लीड नहीं मिली।</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = leads.map((lead, idx) => {
+        const isPaid = lead.status === 'paid';
+        const isAttempted = lead.status === 'attempted';
+        
+        let statusBadge = '';
+        if (isPaid) {
+          statusBadge = `<span class="inline-flex items-center gap-1 bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-bold"><i class="fa-solid fa-circle-check text-emerald-400"></i> सफल (₹${lead.amount})</span>`;
+        } else if (isAttempted) {
+          statusBadge = `<span class="inline-flex items-center gap-1 bg-amber-950/80 border border-amber-500/50 text-amber-300 px-2 py-0.5 rounded-full text-[10px] font-bold"><i class="fa-solid fa-clock-rotate-left text-amber-400"></i> प्रयास किया (Attempted)</span>`;
+        } else {
+          statusBadge = `<span class="inline-flex items-center gap-1 bg-slate-900 border border-slate-700 text-slate-400 px-2 py-0.5 rounded-full text-[10px] font-medium"><i class="fa-solid fa-hourglass-start"></i> पेंडिंग</span>`;
+        }
+
+        // Pre-filled Follow-up WhatsApp message
+        let waMsg = '';
+        if (isPaid) {
+          waMsg = `प्रणाम ${lead.name} जी 🙏\nवैदिक हस्तरेखा एवं ज्योतिष अनुसंधान संस्थान (Astro Margdarshan) में आपका स्वागत है। आपका ₹351 का परामर्श भुगतान प्राप्त हो चुका है।\n\nकृपया अपनी दोनों हथेलियों की साफ फोटो यहाँ भेजें ताकि आचार्य जी आपकी विस्तृत रिपोर्ट तैयार कर सकें।`;
+        } else {
+          waMsg = `प्रणाम ${lead.name} जी 🙏\nआपने Astro Margdarshan पर अपने हस्तरेखा परामर्श के लिए विवरण दर्ज किया था।\nक्या आपको ऑनलाइन पेमेंट में कोई असुविधा आई? आप सीधे हमारे इस आधिकारिक नंबर 9116497140 पर भी ₹351 Google Pay / PhonePe करके दोनों हथेलियों की फोटो भेज सकते हैं।`;
+        }
+
+        const waUrl = lead.phone ? `https://wa.me/91${lead.phone}?text=${encodeURIComponent(waMsg)}` : '#';
+        const callUrl = lead.phone ? `tel:+91${lead.phone}` : '#';
+
+        return `
+          <tr class="hover:bg-amber-950/15 transition">
+            <td class="p-3 text-slate-500 font-mono text-[11px]">${idx + 1}</td>
+            <td class="p-3 text-slate-300 text-[11px] whitespace-nowrap">${lead.created_at}</td>
+            <td class="p-3 text-white font-bold font-hindi">${escapeHtml(lead.name)}</td>
+            <td class="p-3 font-mono text-amber-300 font-bold whitespace-nowrap">
+              ${lead.phone ? `+91 ${lead.phone}` : '<span class="text-slate-600">-</span>'}
+            </td>
+            <td class="p-3 text-slate-300 text-[11px] max-w-xs truncate">${escapeHtml(lead.problem)}</td>
+            <td class="p-3 whitespace-nowrap">${statusBadge}</td>
+            <td class="p-3 text-center whitespace-nowrap">
+              <div class="flex items-center justify-center gap-1.5">
+                ${lead.phone ? `
+                  <a href="${waUrl}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg text-[11px] shadow transition" title="WhatsApp पर चैट करें">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>WhatsApp</span>
+                  </a>
+                  <a href="${callUrl}" class="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded-lg text-[11px] transition" title="कॉल करें">
+                    <i class="fa-solid fa-phone text-xs"></i>
+                  </a>
+                ` : '<span class="text-slate-600 text-[10px]">नंबर उपलब्ध नहीं</span>'}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    function exportToCsv() {
+      if (!allLeads || allLeads.length === 0) {
+        alert("डाउनलोड करने के लिए कोई डेटा नहीं है।");
+        return;
+      }
+      let csv = "Index,Date Time,Customer Name,Phone Number,Problem,Status,Amount\n";
+      allLeads.forEach((l, i) => {
+        csv += `"${i+1}","${l.created_at}","${l.name}","${l.phone}","${l.problem}","${l.status}","${l.amount}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `astro_leads_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Auto-refresh every 45 seconds
+    setInterval(() => {
+      if (!document.getElementById('dashboardApp').classList.contains('hidden')) {
+        fetchLeadsData();
+      }
+    }, 45000);
+
+    // Initial check
+    checkAuth();
+  </script>
+</body>
+</html>
