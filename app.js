@@ -140,9 +140,13 @@ function prewarmRazorpayOrder() {
 }
 
 // ================= BOOKING MODAL CONTROL =================
-function openBookingModal() {
+function openBookingModal(defaultProblem = null) {
   const modal = document.getElementById("bookingModal");
   if (modal) {
+    if (defaultProblem) {
+      const probSelect = document.getElementById("custProblem");
+      if (probSelect) probSelect.value = defaultProblem;
+    }
     modal.classList.remove("hidden");
     document.body.style.overflow = "hidden";
     modal.scrollTop = 0;
@@ -167,6 +171,39 @@ function closeBookingModal() {
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeBookingModal();
 });
+
+// ================= SACRED AUDIO VOICE NOTE PREVIEW (ZERO UGLY ALERTS) =================
+function playSampleVoiceNote() {
+  const notice = document.getElementById("audioSampleNotice");
+  const playBtnIcon = document.getElementById("audioPlayIcon");
+
+  if (notice) notice.classList.remove("hidden");
+
+  // Play a soft sacred bell frequency (528Hz) directly in browser
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      const audioCtx = new AudioCtx();
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(528, audioCtx.currentTime); // Sacred healing chime
+      gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 3.0);
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 3.0);
+    }
+  } catch (e) {}
+
+  if (playBtnIcon) {
+    playBtnIcon.className = "fa-solid fa-volume-high text-emerald-300 animate-bounce";
+    setTimeout(() => {
+      playBtnIcon.className = "fa-solid fa-play text-sm ml-0.5";
+    }, 3500);
+  }
+}
 
 // ================= FORM SUBMISSION & RAZORPAY ₹351 ONE-TIME ORDER =================
 async function handleFormSubmit(event) {

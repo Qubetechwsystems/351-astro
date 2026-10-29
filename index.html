@@ -311,100 +311,156 @@
     </div>
   </header>
 
-  <!-- ================= HERO SECTION ================= -->
-  <section class="relative pt-7 pb-12 sm:pt-14 sm:pb-18 px-4 sm:px-6 overflow-hidden">
+  <!-- ================= HERO SECTION (HIGH CONVERSION & VISUAL DESIGN) ================= -->
+  <section class="relative pt-6 pb-10 sm:pt-12 sm:pb-16 px-4 sm:px-6 overflow-hidden">
     <!-- Ambient Vedic Glow -->
     <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[650px] h-[350px] sm:h-[650px] bg-amber-500/12 rounded-full blur-[110px] pointer-events-none -z-10"></div>
 
     <div class="max-w-4xl mx-auto text-center">
       
       <!-- Trust Eyebrow -->
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-bold mb-4 shadow-inner">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-bold mb-3 shadow-inner">
         <i class="fa-solid fa-om text-amber-400"></i>
-        <span>प्राचीन सामुद्रिक शास्त्र एवं फलित वैदिक ज्योतिष</span>
+        <span>काशी वैदिक परंपरा • प्राचीन सामुद्रिक हस्तरेखा विश्लेषण</span>
       </div>
 
-      <!-- Main Provocative Headline -->
+      <!-- Main Punchy Outcome-Driven Headline -->
       <h2 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight font-hindi">
-        क्या आप भी दिन-रात मेहनत करके थक चुके हैं, फिर भी मनचाही सफलता नहीं मिल रही?
+        हस्तरेखा एवं जन्मकुंडली से जानें — <span class="gold-gradient-text">कब बदलेगा आपका भाग्य?</span>
       </h2>
 
-      <!-- Emotional Subheadline -->
-      <p class="mt-3.5 text-lg sm:text-2xl font-bold gold-gradient-text font-hindi leading-snug max-w-3xl mx-auto">
-        आपकी हथेली की रेखाएं और ग्रह दशा बताएंगी — कब बदलेगा आपका भाग्य और कैसे दूर होंगी जीवन की रुकावटें?
+      <!-- Crisp Subtitle -->
+      <p class="mt-2.5 text-xs sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        बिना किसी अंधविश्वास या महंगे अनुष्ठानों के — <strong class="text-white">24 घंटे में विस्तृत PDF रिपोर्ट + आचार्य जी का व्यक्तिगत वॉइस नोट</strong> सीधे आपके WhatsApp पर प्राप्त करें।
       </p>
 
-      <p class="mt-3.5 text-xs sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-        बिना किसी अंधविश्वास या लाखों के महंगे अनुष्ठानों के — <strong class="text-white">24 घंटे के अंदर विस्तृत PDF रिपोर्ट + आचार्य जी का व्यक्तिगत वॉइस नोट (ऑडियो परामर्श)</strong> सीधे आपके WhatsApp पर प्राप्त करें।
-      </p>
+      <!-- 4 Quick Problem Selector Pills (Interactive Instant Hook) -->
+      <div class="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2 max-w-3xl mx-auto text-left">
+        <button type="button" onclick="openBookingModal('marriage_love')" class="p-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-amber-500/30 hover:border-amber-400 transition flex items-center gap-2 text-xs group">
+          <span class="text-rose-400 text-base shrink-0 group-hover:scale-110 transition">💍</span>
+          <div>
+            <div class="font-bold text-white leading-tight">विवाह विलंब</div>
+            <div class="text-[10px] text-amber-300">रिश्ता पक्का न होना →</div>
+          </div>
+        </button>
 
-      <!-- Authority Offer Card -->
-      <div class="mt-7 max-w-2xl mx-auto bg-gradient-to-b from-[#1b0d32] to-[#110622] p-4 sm:p-6 rounded-3xl border-2 border-amber-500/40 shadow-2xl relative text-left">
+        <button type="button" onclick="openBookingModal('career_business')" class="p-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-amber-500/30 hover:border-amber-400 transition flex items-center gap-2 text-xs group">
+          <span class="text-blue-400 text-base shrink-0 group-hover:scale-110 transition">💼</span>
+          <div>
+            <div class="font-bold text-white leading-tight">करियर व व्यापार</div>
+            <div class="text-[10px] text-amber-300">नौकरी व तरक्की →</div>
+          </div>
+        </button>
+
+        <button type="button" onclick="openBookingModal('finance_debt')" class="p-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-amber-500/30 hover:border-amber-400 transition flex items-center gap-2 text-xs group">
+          <span class="text-emerald-400 text-base shrink-0 group-hover:scale-110 transition">💰</span>
+          <div>
+            <div class="font-bold text-white leading-tight">धन व कर्ज मुक्ति</div>
+            <div class="text-[10px] text-amber-300">पैसा न टिकना →</div>
+          </div>
+        </button>
+
+        <button type="button" onclick="openBookingModal('health_family')" class="p-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/80 border border-amber-500/30 hover:border-amber-400 transition flex items-center gap-2 text-xs group">
+          <span class="text-purple-400 text-base shrink-0 group-hover:scale-110 transition">🧘</span>
+          <div>
+            <div class="font-bold text-white leading-tight">गृह कलह व शांति</div>
+            <div class="text-[10px] text-amber-300">तनाव व अशांति →</div>
+          </div>
+        </button>
+      </div>
+
+      <!-- Authority Offer Card (Visual & Credibility Loaded) -->
+      <div class="mt-6 max-w-3xl mx-auto bg-gradient-to-b from-[#1b0d32] to-[#110622] p-4 sm:p-6 rounded-3xl border-2 border-amber-500/40 shadow-2xl relative text-left">
         
-        <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
-          <!-- Real Indian Pandit Ji Photo with Sacred Aura -->
-          <div class="relative w-32 h-32 sm:w-40 sm:h-40 shrink-0 rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl bg-amber-950 group">
-            <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=400&q=80" alt="आचार्य पंडित रामेश्वर दयाल शास्त्री" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0d041c] via-black/40 to-transparent flex flex-col justify-end p-2 text-left">
-              <span class="text-[11px] font-black text-amber-300 font-hindi drop-shadow flex items-center gap-1">
-                <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i> पं. रामेश्वर शास्त्री
-              </span>
-              <span class="text-[9px] text-slate-300 font-medium">काशी वैदिक पीठ (वाराणसी)</span>
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+          
+          <!-- Visual Images Column (Acharya Portrait + Palmistry Preview) -->
+          <div class="md:col-span-5 flex md:flex-col items-center justify-center gap-3">
+            <!-- Acharya Portrait -->
+            <div class="relative w-36 h-36 sm:w-44 sm:h-44 rounded-2xl overflow-hidden border-2 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.4)] shrink-0 bg-amber-950">
+              <img src="acharya-portrait.jpg" alt="आचार्य पंडित रामेश्वर दयाल शास्त्री" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-2 text-left">
+                <span class="text-[11px] font-black text-amber-300 font-hindi drop-shadow flex items-center gap-1">
+                  <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i> पं. रामेश्वर शास्त्री
+                </span>
+                <span class="text-[9px] text-slate-300 font-medium">काशी वैदिक पीठ (28+ वर्ष)</span>
+              </div>
+            </div>
+
+            <!-- Palmistry Visual Badge -->
+            <div class="relative w-36 h-36 sm:w-44 sm:h-28 rounded-2xl overflow-hidden border border-amber-500/40 shadow-lg bg-black/60 hidden sm:block">
+              <img src="palmistry-chart.jpg" alt="हस्तरेखा सामुद्रिक विश्लेषण" class="w-full h-full object-cover opacity-90">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-2">
+                <span class="text-[10px] font-bold text-amber-200 flex items-center gap-1">
+                  <i class="fa-solid fa-hand text-amber-400 text-[11px]"></i> सामुद्रिक रेखा मिलान
+                </span>
+              </div>
             </div>
           </div>
           
-          <div class="space-y-2">
+          <!-- Content & Guarantees Column -->
+          <div class="md:col-span-7 space-y-3">
             <div class="flex flex-wrap items-center gap-2">
-              <span class="inline-flex items-center gap-1.5 bg-amber-500/20 border border-amber-500/40 px-2.5 py-0.5 rounded-full text-[11px] font-bold text-amber-300">
-                <i class="fa-solid fa-award text-amber-400"></i> मुख्य वैदिक ज्योतिषाचार्य
+              <span class="inline-flex items-center gap-1 bg-amber-500/20 border border-amber-500/40 px-2.5 py-0.5 rounded-full text-[11px] font-bold text-amber-300">
+                <i class="fa-solid fa-award text-amber-400 text-xs"></i> वरिष्ठ वैदिक ज्योतिषाचार्य
               </span>
-              <span class="text-[11px] text-emerald-400 font-semibold bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
-                <i class="fa-solid fa-check-double text-[10px]"></i> 28+ वर्ष अनुभव
+              <span class="text-[11px] text-emerald-300 font-semibold bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i class="fa-solid fa-check-double text-[10px]"></i> 10,000+ संतुष्ट जातक
               </span>
             </div>
 
-            <h3 class="text-lg sm:text-2xl font-extrabold text-white font-hindi leading-snug">
-              आचार्य पंडित रामेश्वर दयाल शास्त्री
+            <h3 class="text-base sm:text-xl font-extrabold text-white font-hindi leading-snug">
+              आपकी हथेली की फोटो देखकर आचार्य जी स्वयं तैयार करेंगे सटीक रिपोर्ट
             </h3>
 
-            <p class="text-xs sm:text-sm text-amber-200/90 font-medium font-hindi">
-              आपकी हथेली की दोनों फोटो व जन्म विवरण का अध्ययन करके <strong class="text-white">स्वयं 24 घंटे में</strong> तैयार करेंगे आपकी हस्तरेखा व कुंडली रिपोर्ट।
-            </p>
+            <!-- 3 Crisp Bullet Points (Easy to Scan) -->
+            <ul class="text-xs text-slate-200 space-y-1.5 pt-0.5">
+              <li class="flex items-start gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5 text-xs shrink-0"></i>
+                <span><strong>सचित्र PDF रिपोर्ट:</strong> भाग्य रेखा, विवाह रेखा, सूर्य पर्वत व धन त्रिकोण का संपूर्ण मिलान।</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5 text-xs shrink-0"></i>
+                <span><strong>व्यक्तिगत ऑडियो वॉइस नोट:</strong> आचार्य जी स्वयं अपनी आवाज में समस्या का कारण व हल समझाएंगे।</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5 text-xs shrink-0"></i>
+                <span><strong>100% सात्विक घरेलू उपाय:</strong> बिना महंगे रत्न या अनुष्ठानों के केवल सरल व अचूक वैदिक नियम।</span>
+              </li>
+            </ul>
 
-            <p class="text-xs text-slate-300 leading-relaxed pt-0.5">
-              भाग्य रेखा, विवाह रेखा, सूर्य पर्वत, धन त्रिकोण व नवग्रहों की सूक्ष्म पड़ताल — बिना किसी डर, अंधविश्वास या महंगे अनुष्ठानों के सात्विक व व्यावहारिक समाधान।
-            </p>
-          </div>
-        </div>
+            <!-- Price & Urgent Action Box -->
+            <div class="pt-3 border-t border-amber-500/25">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <div>
+                  <div class="text-[10px] text-slate-400 font-medium">विशेष परामर्श दक्षिणा (एकमुश्त):</div>
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-2xl sm:text-3xl font-black text-amber-400 font-display">₹501</span>
+                    <span class="text-xs sm:text-sm text-slate-400 line-through">₹2,100</span>
+                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-500/30">76% छूट</span>
+                  </div>
+                </div>
+                <div class="text-[10px] text-amber-300 flex items-center gap-1 bg-amber-950/50 px-2 py-1 rounded-lg border border-amber-500/20">
+                  <i class="fa-regular fa-clock text-yellow-400"></i>
+                  <span>शेष: <strong id="countdownTimer" class="font-mono text-yellow-300">14:59</strong></span>
+                </div>
+              </div>
 
-        <!-- Price & Urgent Action Box -->
-        <div class="mt-5 pt-4 border-t border-amber-500/25 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="text-center sm:text-left">
-            <div class="text-[11px] text-slate-400 font-medium">विशेष परामर्श दक्षिणा (एकमुश्त • कोई अतिरिक्त चार्ज नहीं):</div>
-            <div class="flex items-baseline gap-2 justify-center sm:justify-start">
-              <span class="text-3xl sm:text-4xl font-black text-amber-400 font-display">₹501</span>
-              <span class="text-sm sm:text-base text-slate-400 line-through">₹2,100</span>
-              <span class="text-xs font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/30">76% छूट</span>
+              <!-- Master Action Button -->
+              <button onclick="openBookingModal()" class="w-full mt-3 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-gray-950 font-black py-3 px-5 rounded-xl text-sm sm:text-base shadow-[0_0_30px_rgba(245,158,11,0.65)] transition transform hover:scale-[1.02] active:scale-95 pulse-btn flex items-center justify-center gap-2">
+                <span>मात्र ₹501 में परामर्श बुक करें →</span>
+              </button>
             </div>
-            <div class="text-[11px] text-amber-300 mt-1 flex items-center justify-center sm:justify-start gap-1">
-              <i class="fa-regular fa-clock"></i>
-              <span>ऑफर समाप्त होने में शेष: <strong id="countdownTimer" class="font-mono text-yellow-300">14:59</strong> मिनट</span>
-            </div>
-          </div>
 
-          <!-- Master Action Button -->
-          <button onclick="openBookingModal()" class="w-full sm:w-auto bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-gray-950 font-black px-7 py-3.5 rounded-xl text-base shadow-[0_0_30px_rgba(245,158,11,0.65)] transition transform hover:scale-105 pulse-btn flex items-center justify-center gap-2">
-            <span>मात्र ₹501 में परामर्श बुक करें</span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </button>
+          </div>
         </div>
 
         <!-- Trust Badges -->
-        <div class="mt-4 pt-3 border-t border-amber-500/15 flex flex-wrap items-center justify-around gap-2 text-[11px] text-slate-300">
-          <span class="flex items-center gap-1.5"><i class="fa-solid fa-lock text-emerald-400"></i> सुरक्षित Razorpay भुगतान</span>
-          <span class="flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-400"></i> 24 घंटे में WhatsApp डिलीवरी</span>
-          <span class="flex items-center gap-1.5"><i class="fa-solid fa-phone-slash text-cyan-400"></i> किसी कॉल की ज़रूरत नहीं</span>
-          <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-amber-400"></i> 100% सात्विक व गोपनीय</span>
+        <div class="mt-4 pt-3 border-t border-amber-500/15 flex flex-wrap items-center justify-around gap-2 text-[10px] sm:text-[11px] text-slate-300">
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-lock text-emerald-400"></i> सुरक्षित UPI भुगतान</span>
+          <span class="flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-emerald-400"></i> 24h WhatsApp डिलीवरी</span>
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-phone-slash text-cyan-400"></i> नो कॉल पॉलिसी</span>
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-amber-400"></i> 100% गोपनीय</span>
         </div>
       </div>
 
@@ -681,8 +737,8 @@
       <div class="mt-8 p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-[#180d2c] via-[#101b22] to-[#180d2c] border-2 border-emerald-500/40 shadow-2xl text-left">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-emerald-500/20">
           <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 shadow-md">
-              <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=150&q=80" alt="पं. रामेश्वर शास्त्री" class="w-full h-full object-cover">
+            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 shadow-md bg-amber-950">
+              <img src="acharya-portrait.jpg" alt="पं. रामेश्वर शास्त्री" class="w-full h-full object-cover">
             </div>
             <div>
               <h5 class="text-sm font-bold text-white font-hindi flex items-center gap-1.5">
@@ -702,11 +758,11 @@
 
         <!-- WhatsApp Audio Player Bar -->
         <div class="mt-4 bg-[#1f2c34] p-3.5 rounded-2xl flex items-center gap-3.5 border border-emerald-500/30 shadow-inner">
-          <button type="button" onclick="alert('नमस्ते! यह आचार्य जी के व्यक्तिगत ऑडियो वॉइस नोट का नमूना प्रारूप है। जब आप ₹501 की दक्षिणा देकर अपने हाथों की फोटो भेजेंगे, तो आचार्य जी आपकी कुंडली व हस्तरेखा का अध्ययन करके स्वयं इसी प्रकार 3-5 मिनट का विस्तृत वॉइस नोट आपके WhatsApp पर भेजेंगे।')" class="w-11 h-11 rounded-full bg-emerald-500 hover:bg-emerald-400 text-gray-950 flex items-center justify-center shrink-0 shadow-lg transition active:scale-95">
-            <i class="fa-solid fa-play text-sm ml-0.5"></i>
+          <button type="button" onclick="playSampleVoiceNote()" class="w-11 h-11 rounded-full bg-emerald-500 hover:bg-emerald-400 text-gray-950 flex items-center justify-center shrink-0 shadow-lg transition active:scale-95" title="ऑडियो प्रारूप सुनें">
+            <i id="audioPlayIcon" class="fa-solid fa-play text-sm ml-0.5"></i>
           </button>
           
-          <div class="flex-1 space-y-1.5">
+          <div class="flex-1 space-y-1.5 cursor-pointer" onclick="playSampleVoiceNote()">
             <!-- Simulated Audio Waveform -->
             <div class="flex items-center gap-1 h-6 overflow-hidden">
               <span class="w-1 bg-emerald-400 h-2 rounded-full"></span>
@@ -727,12 +783,23 @@
               <span class="w-1 bg-emerald-400/40 h-2 rounded-full"></span>
             </div>
             <div class="flex justify-between text-[11px] text-slate-300 font-mono">
-              <span>0:00</span>
+              <span class="text-amber-300">▶ क्लिक करके नमूना प्रारूप देखें</span>
               <span class="text-emerald-400">04:12 • WhatsApp Audio</span>
             </div>
           </div>
 
           <i class="fa-brands fa-whatsapp text-emerald-400 text-2xl shrink-0"></i>
+        </div>
+
+        <!-- Sample Audio Transcript Banner (Appears smoothly without alert popup) -->
+        <div id="audioSampleNotice" class="hidden mt-3 p-3 rounded-xl bg-emerald-950/70 border border-emerald-500/40 text-xs text-emerald-200 animate-fadeIn">
+          <p class="font-bold text-white mb-1 flex items-center gap-1.5">
+            <i class="fa-solid fa-microphone-lines text-emerald-400"></i>
+            <span>आचार्य जी के व्यक्तिगत वॉइस नोट का प्रारूप:</span>
+          </p>
+          <p class="text-slate-300 leading-relaxed italic">
+            "कल्याणमस्तु! मैं आचार्य रामेश्वर शास्त्री... जब आप ₹501 की दक्षिणा देकर अपने दोनों हाथों की फोटो भेजते हैं, तो मैं स्वयं आपकी हथेली की जीवन रेखा, मस्तिष्क रेखा, भाग्य रेखा व नवग्रहों की चाल का अध्ययन कर 3 से 5 मिनट का ऐसा ही व्यक्तिगत ऑडियो संदेश आपके WhatsApp पर प्रेषित करता हूँ।"
+          </p>
         </div>
 
         <p class="text-xs text-slate-300 mt-3 leading-relaxed">
@@ -994,7 +1061,7 @@
   <section class="py-12 px-4 sm:px-6 bg-[#0c051a]">
     <div class="max-w-3xl mx-auto card-vedic p-6 sm:p-8 rounded-3xl border border-amber-500/35 flex flex-col sm:flex-row items-center gap-6">
       <div class="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-2 border-amber-400 shrink-0 shadow-2xl bg-amber-950">
-        <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=400&q=80" alt="आचार्य पंडित रामेश्वर दयाल शास्त्री" class="w-full h-full object-cover">
+        <img src="acharya-portrait.jpg" alt="आचार्य पंडित रामेश्वर दयाल शास्त्री" class="w-full h-full object-cover">
       </div>
       <div class="text-center sm:text-left space-y-2">
         <span class="text-amber-400 text-xs font-bold uppercase tracking-wider">विद्वान मार्गदर्शक परिचय</span>
@@ -1350,6 +1417,6 @@
   </div>
 
   <!-- JavaScript Application File with Cache-Buster -->
-  <script src="app.js?v=2.6"></script>
+  <script src="app.js?v=2.7"></script>
 </body>
 </html>
