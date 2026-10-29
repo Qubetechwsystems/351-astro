@@ -1,4 +1,4 @@
-// api/track-purchase.js - Meta Conversions API (CAPI) Server-Side Tracking for ₹351 Consultation
+// api/track-purchase.js - Meta Conversions API (CAPI) Server-Side Tracking for ₹501 Consultation
 import crypto from 'crypto';
 
 export default async function handler(req, res) {
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     const hashedPhone = cleanPhone ? hash(`91${cleanPhone}`) : hash('919116497140');
     const hashedName = name ? hash(name) : hash('astrologer_client');
 
-    const purchaseValue = parseFloat(value) || 351.00;
+    const purchaseValue = parseFloat(value) || 501.00;
 
     const eventPayload = {
       data: [
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
           custom_data: {
             currency: 'INR',
             value: purchaseValue,
-            content_name: '₹351 Vedic Astrology & Palmistry Consultation',
+            content_name: '₹501 Vedic Astrology & Palmistry Consultation',
             content_type: 'product'
           }
         }

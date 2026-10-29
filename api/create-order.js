@@ -1,4 +1,4 @@
-// api/create-order.js - Razorpay Standard One-Time Order API (₹351 Consultation)
+// api/create-order.js - Razorpay Standard One-Time Order API (₹501 Consultation)
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -18,16 +18,16 @@ export default async function handler(req, res) {
 
     const cleanPhone = (phone || '').replace(/[^0-9]/g, '').slice(-10);
 
-    // ₹351 एकमुश्त परामर्श दक्षिणा (35100 पैसे)
+    // ₹501 एकमुश्त परामर्श दक्षिणा (50100 पैसे)
     const payload = {
-      amount: 35100,
+      amount: 50100,
       currency: 'INR',
       receipt: `rcpt_${Date.now()}`,
       notes: {
         customer_name: name || 'Astro Seeker',
         customer_phone: cleanPhone || '',
         problem: problem || 'general_guidance',
-        service_type: '₹351 संपूर्ण हस्तरेखा व कुंडली विश्लेषण (24 घंटे में रिपोर्ट)'
+        service_type: '₹501 संपूर्ण हस्तरेखा व कुंडली विश्लेषण (24 घंटे में रिपोर्ट)'
       }
     };
 
