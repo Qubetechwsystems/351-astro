@@ -231,7 +231,7 @@
       const total = allLeads.length;
       const paid = allLeads.filter(l => l.status === 'paid').length;
       const pending = allLeads.filter(l => l.status !== 'paid').length;
-      const revenue = paid * 351;
+      const revenue = allLeads.filter(l => l.status === 'paid').reduce((sum, l) => sum + (Number(l.amount) || 501), 0);
 
       document.getElementById('statTotalLeads').textContent = total;
       document.getElementById('statPaidLeads').textContent = paid;

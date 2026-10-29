@@ -1,5 +1,5 @@
 /**
- * Vedic Palmistry & Astrology Consultation Platform (₹351 One-Time Pure Order)
+ * Vedic Palmistry & Astrology Consultation Platform (₹501 One-Time Pure Order)
  * Standalone Application with Razorpay One-Time Orders & Direct WhatsApp Redirection
  */
 
@@ -7,7 +7,7 @@
 const APP_CONFIG = {
   RAZORPAY_KEY_ID: "rzp_live_Tof2RpwJEWMNx9",
   META_PIXEL_ID: "1111594184953741", // Astro Margdarshan New Dataset
-  CONSULTATION_AMOUNT: 351.00,    // एकमुश्त ₹351 शुभ दक्षिणा
+  CONSULTATION_AMOUNT: 501.00,    // एकमुश्त ₹501 शुभ दक्षिणा
   CURRENCY: "INR",
   BUSINESS_NAME: "वैदिक हस्तरेखा एवं ज्योतिष अनुसंधान केंद्र",
   WHATSAPP_SUPPORT_NUMBER: "919116497140"
@@ -149,7 +149,7 @@ function openBookingModal() {
     trackMetaEvent('InitiateCheckout', {
       value: APP_CONFIG.CONSULTATION_AMOUNT,
       currency: APP_CONFIG.CURRENCY,
-      content_name: '₹351 Palmistry & Kundali Consultation'
+      content_name: '₹501 Palmistry & Kundali Consultation'
     });
     // ⚡ Warm up server function in background while user types
     prewarmRazorpayOrder();
@@ -188,7 +188,7 @@ async function handleFormSubmit(event) {
   }
 
   try {
-    localStorage.setItem('astro_lead_351', JSON.stringify({ name, phone, problem, timestamp: Date.now() }));
+    localStorage.setItem('astro_lead_501', JSON.stringify({ name, phone, problem, timestamp: Date.now() }));
   } catch (e) {}
 
   const payBtn = document.getElementById("payBtn");
@@ -200,7 +200,7 @@ async function handleFormSubmit(event) {
   trackMetaEvent('InitiateCheckout', {
     value: APP_CONFIG.CONSULTATION_AMOUNT,
     currency: APP_CONFIG.CURRENCY,
-    content_name: '₹351 Palmistry & Kundali Consultation',
+    content_name: '₹501 Palmistry & Kundali Consultation',
     customer_phone: phone,
     customer_name: name
   });
@@ -213,7 +213,7 @@ async function handleFormSubmit(event) {
         success: true,
         order_id: preloadedOrderData.order_id,
         key_id: preloadedOrderData.key_id || APP_CONFIG.RAZORPAY_KEY_ID,
-        amount: preloadedOrderData.amount || 35100,
+        amount: preloadedOrderData.amount || 50100,
         currency: preloadedOrderData.currency || "INR"
       };
       console.log("⚡ Using preloaded Razorpay Order for instant popup:", data.order_id);
@@ -228,7 +228,7 @@ async function handleFormSubmit(event) {
     }
 
     if (data.success && data.order_id) {
-      console.log("✅ Razorpay ₹351 Order Ready (Instant):", data.order_id);
+      console.log("✅ Razorpay ₹501 Order Ready (Instant):", data.order_id);
 
       const problemMap = {
         'marriage_love': 'विवाह में विलंब, वैवाहिक कलह व प्रेम संबंध',
@@ -241,17 +241,17 @@ async function handleFormSubmit(event) {
 
       // WhatsApp रीडायरेक्शन लिंक तैयार करें
       const getWhatsAppUrl = (paymentId) => {
-        const text = `जय श्री राम, मैंने ₹351 की दक्षिणा देकर संपूर्ण हस्तरेखा व कुंडली परामर्श बुक कर लिया है।\n\n📌 *मेरे विवरण:*\n• नाम: ${name}\n• फ़ोन: ${phone}\n• मुख्य विषय: ${selectedProblem}\n• पेमेंट ID: ${paymentId || ''}\n\nकृपया 24 घंटे में मेरी विस्तृत समाधान रिपोर्ट व आचार्य जी का ऑडियो संदेश तैयार करें। यह मेरी दोनों हथेलियों की साफ फोटो है:`;
+        const text = `जय श्री राम, मैंने ₹501 की दक्षिणा देकर संपूर्ण हस्तरेखा व कुंडली परामर्श बुक कर लिया है।\n\n📌 *मेरे विवरण:*\n• नाम: ${name}\n• फ़ोन: ${phone}\n• मुख्य विषय: ${selectedProblem}\n• पेमेंट ID: ${paymentId || ''}\n\nकृपया 24 घंटे में मेरी विस्तृत समाधान रिपोर्ट व आचार्य जी का ऑडियो संदेश तैयार करें। यह मेरी दोनों हथेलियों की साफ फोटो है:`;
         return `https://wa.me/${APP_CONFIG.WHATSAPP_SUPPORT_NUMBER}?text=${encodeURIComponent(text)}`;
       };
 
       // Razorpay Standard One-Time Order Options (No AutoPay)
       const options = {
         key: data.key_id || APP_CONFIG.RAZORPAY_KEY_ID,
-        amount: data.amount || 35100,
+        amount: data.amount || 50100,
         currency: data.currency || "INR",
         name: APP_CONFIG.BUSINESS_NAME,
-        description: "₹351 संपूर्ण हस्तरेखा व कुंडली विश्लेषण (24 घंटे में रिपोर्ट)",
+        description: "₹501 संपूर्ण हस्तरेखा व कुंडली विश्लेषण (24 घंटे में रिपोर्ट)",
         image: "https://cdn-icons-png.flaticon.com/512/3663/3663335.png",
         order_id: data.order_id,
         prefill: {
@@ -265,11 +265,11 @@ async function handleFormSubmit(event) {
           console.log("✅ Payment Successful! Redirecting to WhatsApp...");
           const paymentId = resp.razorpay_payment_id || resp.razorpay_order_id || ('PAY_' + Date.now());
 
-          // 1. Meta Pixel: Purchase Event Fire (₹351)
+          // 1. Meta Pixel: Purchase Event Fire (₹501)
           trackMetaEvent('Purchase', {
             value: APP_CONFIG.CONSULTATION_AMOUNT,
             currency: APP_CONFIG.CURRENCY,
-            content_name: '₹351 Palmistry & Kundali Consultation'
+            content_name: '₹501 Palmistry & Kundali Consultation'
           }, { eventID: paymentId });
 
           // 2. Server-side Meta Conversions API (CAPI)
@@ -294,7 +294,7 @@ async function handleFormSubmit(event) {
             preloadedOrderPromise = null;
             if (payBtn) {
               payBtn.disabled = false;
-              payBtn.innerHTML = '<i class="fa-solid fa-lock"></i> <span>सुरक्षित भुगतान करें — मात्र ₹351 →</span>';
+              payBtn.innerHTML = '<i class="fa-solid fa-lock"></i> <span>सुरक्षित भुगतान करें — मात्र ₹501 →</span>';
             }
           }
         }
@@ -306,7 +306,7 @@ async function handleFormSubmit(event) {
         preloadedOrderPromise = null;
         if (payBtn) {
           payBtn.disabled = false;
-          payBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> <span>पुनः प्रयास करें — ₹351</span>';
+          payBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> <span>पुनः प्रयास करें — ₹501</span>';
         }
       });
       rzp.open();
@@ -318,7 +318,7 @@ async function handleFormSubmit(event) {
     console.error("Order Error:", err);
     alert("सूचना: " + err.message);
     if (payBtn) {
-      payBtn.innerHTML = '<i class="fa-solid fa-lock"></i> <span>सुरक्षित भुगतान करें — मात्र ₹351 →</span>';
+      payBtn.innerHTML = '<i class="fa-solid fa-lock"></i> <span>सुरक्षित भुगतान करें — मात्र ₹501 →</span>';
       payBtn.disabled = false;
     }
   }
@@ -332,11 +332,11 @@ function startLiveProofTicker() {
   if (!toast || !textEl || !timeEl) return;
 
   const proofs = [
-    { name: "संजय माथुर (जयपुर)", action: "ने ₹351 का परामर्श बुक किया", time: "2 मिनट पहले" },
+    { name: "संजय माथुर (जयपुर)", action: "ने ₹501 का परामर्श बुक किया", time: "2 मिनट पहले" },
     { name: "शालिनी कुलश्रेष्ठ (भोपाल)", action: "ने हस्तरेखा विश्लेषण बुक किया", time: "4 मिनट पहले" },
     { name: "विकास अग्रवाल (कानपुर)", action: "ने करियर परामर्श बुक किया", time: "7 मिनट पहले" },
     { name: "रोहित तोमर (इंदौर)", action: "ने कुंडली व हस्तरेखा बुक की", time: "11 मिनट पहले" },
-    { name: "अनिता मिश्रा (लखनऊ)", action: "ने ₹351 परामर्श बुक किया", time: "14 मिनट पहले" },
+    { name: "अनिता मिश्रा (लखनऊ)", action: "ने ₹501 परामर्श बुक किया", time: "14 मिनट पहले" },
     { name: "दीपक शर्मा (दिल्ली)", action: "ने विवाह विलंब समाधान बुक किया", time: "18 मिनट पहले" }
   ];
 
