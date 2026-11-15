@@ -170,8 +170,8 @@
           <div class="p-3 rounded-xl bg-purple-950/40 border border-amber-500/20 flex items-start gap-2">
             <i class="fa-solid fa-circle-check text-emerald-400 mt-0.5 text-xs shrink-0"></i>
             <div>
-              <strong class="text-white block font-hindi">4. आचार्य जी का व्यक्तिगत वॉइस नोट</strong>
-              <span class="text-[11px] text-slate-300">WhatsApp पर 2-3 मिनट का व्यक्तिगत ऑडियो मार्गदर्शन।</span>
+              <strong class="text-white block font-hindi">4. शास्त्रीय हथेली नियम अनुसार</strong>
+              <span class="text-[11px] text-slate-300">पुरुषों का दायां हाथ (Right) एवं महिलाओं का बायां हाथ (Left)।</span>
             </div>
           </div>
         </div>
@@ -206,7 +206,7 @@
           हस्तरेखा विवरण दर्ज कर ₹151 का संकल्प करें
         </h3>
         <p class="text-xs text-slate-300 mt-0.5">
-          भुगतान के तुरंत बाद WhatsApp खुलेगा, जहाँ आप दोनों हथेलियों की फोटो भेज सकेंगे।
+          भुगतान के तुरंत बाद WhatsApp खुलेगा, जहाँ आप अपनी हथेली (पुरुष: दायां हाथ, महिला: बायां हाथ) की फोटो भेज सकेंगे।
         </p>
       </div>
 
@@ -371,7 +371,7 @@
           const selectedProb = problemMap[problem] || 'हस्तरेखा विश्लेषण';
 
           const getWaUrl = (paymentId) => {
-            const text = `जय श्री राम, मैंने ₹151 का विशेष गुरु कृपा संकल्प लेकर हस्तरेखा रिपोर्ट बुक कर ली है।\n\n📌 *मेरे विवरण:*\n• नाम: ${name}\n• फ़ोन: ${phone}\n• विषय: ${selectedProb}\n• पेमेंट ID: ${paymentId || ''}\n\nकृपया 24 घंटे में मेरी हस्तरेखा समाधान रिपोर्ट व आचार्य जी का ऑडियो संदेश तैयार करें। यह मेरी दोनों हथेलियों की साफ फोटो है:`;
+            const text = `जय श्री राम, मैंने ₹151 का विशेष गुरु कृपा संकल्प लेकर हस्तरेखा PDF रिपोर्ट बुक कर ली है।\n\n📌 *मेरे विवरण:*\n• नाम: ${name}\n• फ़ोन: ${phone}\n• विषय: ${selectedProb}\n• पेमेंट ID: ${paymentId || ''}\n\nकृपया 24 घंटे में मेरी विस्तृत हस्तरेखा समाधान PDF रिपोर्ट तैयार करें। यह मेरी हथेली की साफ फोटो है (पुरुष: दायां हाथ / महिला: बायां हाथ):`;
             return `https://wa.me/919116497140?text=${encodeURIComponent(text)}`;
           };
 
