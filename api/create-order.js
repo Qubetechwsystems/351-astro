@@ -1,4 +1,4 @@
-// api/create-order.js - Razorpay Standard One-Time Order API (₹501 Consultation)
+// api/create-order.js - Dynamic Order Creation (₹501 Standard or ₹151 Today Offer)
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const { name, phone, problem } = body;
+    const { name, phone, problem, amount: customAmount } = body;
 
     const key_id = 'rzp_live_Tof2RpwJEWMNx9';
     const key_secret = 'BUG1LRSI1uHjxtz8k51eovT8';
@@ -18,16 +18,19 @@ export default async function handler(req, res) {
 
     const cleanPhone = (phone || '').replace(/[^0-9]/g, '').slice(-10);
 
-    // ₹501 एकमुश्त परामर्श दक्षिणा (50100 पैसे)
+    // Support flexible amount: ₹151 for Today Offer, ₹501 for Home Page
+    const orderAmountInRupees = customAmount ? Number(customAmount) : 501;
+    const amountInPaise = Math.round(orderAmountInRupees * 100);
+
     const payload = {
-      amount: 50100,
+      amount: amountInPaise,
       currency: 'INR',
       receipt: `rcpt_${Date.now()}`,
       notes: {
         customer_name: name || 'Astro Seeker',
         customer_phone: cleanPhone || '',
         problem: problem || 'general_guidance',
-        service_type: '₹501 संपूर्ण हस्तरेखा व कुंडली विश्लेषण (24 घंटे में रिपोर्ट)'
+        service_type: `₹${orderAmountInRupees} हस्तरेखा विश्लेषण रिपोर्ट`
       }
     };
 
