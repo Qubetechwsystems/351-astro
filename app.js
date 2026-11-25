@@ -1,40 +1,77 @@
 /**
- * Vedic Palmistry & Astrology Consultation Platform (₹501 One-Time Pure Order)
- * Standalone Application with Razorpay One-Time Orders & Direct WhatsApp Redirection
+ * Vedic Palmistry & Astrology Consultation Platform
+ * Direct Client-Side Razorpay Integration (Zero Serverless Dependency)
+ * Pure ₹251 Shagun Dakshina (25,100 Paise)
+ * Triple Deduplication Meta Pixel Tracking & Clean WhatsApp Auto-Redirection
  */
 
 // ================= GLOBAL CONFIGURATION =================
 const APP_CONFIG = {
-  RAZORPAY_KEY_ID: "rzp_live_Tof2RpwJEWMNx9",
-  META_PIXEL_ID: "1111594184953741", // Astro Margdarshan New Dataset
-  CONSULTATION_AMOUNT: 501.00,    // एकमुश्त ₹501 शुभ दक्षिणा
+  RAZORPAY_KEY_ID: "rzp_live_Tof2RpwJEWMNx9", // Live Razorpay Key
+  META_PIXEL_ID: "2242280556724298",
+  CONSULTATION_AMOUNT: 251.00, // एकमुश्त ₹251 शुभ दक्षिणा (No autopay)
   CURRENCY: "INR",
   BUSINESS_NAME: "वैदिक हस्तरेखा एवं ज्योतिष अनुसंधान केंद्र",
   WHATSAPP_SUPPORT_NUMBER: "919116497140"
 };
 
 // ================= META PIXEL HELPER =================
+function initMetaPixel() {
+  if (APP_CONFIG.META_PIXEL_ID) {
+    try {
+      if (typeof window.fbq === 'function') {
+        window.fbq('init', APP_CONFIG.META_PIXEL_ID);
+        window.fbq('track', 'PageView');
+        console.log("✅ [Meta Pixel] PageView Event active.");
+      }
+    } catch (err) {}
+  }
+}
+
 function trackMetaEvent(eventName, params = {}, options = {}) {
-  if (APP_CONFIG.META_PIXEL_ID && APP_CONFIG.META_PIXEL_ID !== "YOUR_PIXEL_ID" && typeof window.fbq === 'function') {
+  console.log(`📡 [Meta Pixel Event]: ${eventName}`, params);
+  if (typeof window.fbq === 'function') {
     try {
       window.fbq('track', eventName, params, options);
     } catch (e) {}
   }
 }
 
-// ================= COUNTDOWN TIMER (14:59) =================
+// ================= PERSISTENT COUNTDOWN TIMER (REAL URGENCY) =================
 function startCountdown() {
   const timerElement = document.getElementById("countdownTimer");
-  if (!timerElement) return;
+  const stickyTimer = document.getElementById("stickyTimer");
+  if (!timerElement && !stickyTimer) return;
 
-  let totalSeconds = 14 * 60 + 59;
-  setInterval(() => {
-    if (totalSeconds <= 0) totalSeconds = 15 * 60;
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    totalSeconds--;
-  }, 1000);
+  const DURATION_SECONDS = 14 * 60 + 59;
+  const STORAGE_KEY = "astro_timer_end";
+  let endTime = localStorage.getItem(STORAGE_KEY);
+
+  const now = Date.now();
+  if (!endTime || parseInt(endTime, 10) < now) {
+    endTime = now + DURATION_SECONDS * 1000;
+    localStorage.setItem(STORAGE_KEY, endTime.toString());
+  } else {
+    endTime = parseInt(endTime, 10);
+  }
+
+  function updateDisplay() {
+    const current = Date.now();
+    let remaining = Math.max(0, Math.floor((endTime - current) / 1000));
+    if (remaining <= 0) {
+      endTime = Date.now() + DURATION_SECONDS * 1000;
+      localStorage.setItem(STORAGE_KEY, endTime.toString());
+      remaining = DURATION_SECONDS;
+    }
+    const minutes = Math.floor(remaining / 60);
+    const seconds = remaining % 60;
+    const formatted = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    if (timerElement) timerElement.textContent = formatted;
+    if (stickyTimer) stickyTimer.textContent = formatted;
+  }
+
+  updateDisplay();
+  setInterval(updateDisplay, 1000);
 }
 
 // ================= FAQ ACCORDION =================
@@ -44,7 +81,7 @@ function toggleFaq(index) {
   if (!answer) return;
   const isHidden = answer.classList.contains("hidden");
 
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 6; i++) {
     const a = document.getElementById(`faq-ans-${i}`);
     const ic = document.getElementById(`faq-icon-${i}`);
     if (a) a.classList.add("hidden");
@@ -57,106 +94,43 @@ function toggleFaq(index) {
   }
 }
 
-// ================= AUTO-SAVE LEAD ON 10-DIGIT PHONE INPUT =================
-let autoSavedLeadKey = "";
-let preloadedOrderData = null;
-
-function setupAutoLeadCapture() {
-  const phoneInput = document.getElementById("custPhone");
-  const nameInput = document.getElementById("custName");
-  const problemInput = document.getElementById("custProblem");
-  if (!phoneInput) return;
-
-  function triggerLeadAutoSave() {
-    const rawPhone = phoneInput.value || "";
-    const cleanPhone = rawPhone.replace(/[^0-9]/g, '').slice(-10);
-
-    if (cleanPhone.length !== 10) return;
-
-    const rawName = (nameInput?.value || "").trim();
-    const name = rawName || "जातक";
-    const problem = problemInput?.value || "general_guidance";
-
-    const leadKey = `${cleanPhone}_${name}_${problem}`;
-    if (leadKey === autoSavedLeadKey) return; // avoid duplicate calls
-    autoSavedLeadKey = leadKey;
-
-    console.log("⚡ Auto-saving lead to Razorpay/Admin backend:", cleanPhone, name);
-
-    fetch('/api/create-order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone: cleanPhone, problem })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success && data.order_id) {
-        preloadedOrderData = {
-          order_id: data.order_id,
-          phone: cleanPhone,
-          name: name,
-          problem: problem,
-          key_id: data.key_id,
-          amount: data.amount,
-          currency: data.currency
-        };
-        console.log("✅ Lead auto-saved in backend & Order preloaded:", data.order_id);
+// ================= SAMPLE REPORT TABS =================
+function switchSampleTab(tabName) {
+  const tabs = ['palm', 'timeline', 'questions', 'remedies'];
+  tabs.forEach(t => {
+    const btn = document.getElementById(`tab-btn-${t}`);
+    const content = document.getElementById(`tab-content-${t}`);
+    if (btn) {
+      if (t === tabName) {
+        btn.classList.add('bg-amber-500', 'text-slate-950', 'font-bold');
+        btn.classList.remove('bg-amber-500/10', 'text-amber-300');
+      } else {
+        btn.classList.remove('bg-amber-500', 'text-slate-950', 'font-bold');
+        btn.classList.add('bg-amber-500/10', 'text-amber-300');
       }
-    })
-    .catch(err => {
-      console.warn("Auto-save lead note:", err);
-    });
-  }
-
-  // Instant capture as soon as 10th digit is entered
-  phoneInput.addEventListener("input", () => {
-    const cleanPhone = (phoneInput.value || "").replace(/[^0-9]/g, '').slice(-10);
-    if (cleanPhone.length === 10) {
-      triggerLeadAutoSave();
+    }
+    if (content) {
+      if (t === tabName) {
+        content.classList.remove('hidden');
+      } else {
+        content.classList.add('hidden');
+      }
     }
   });
-
-  // Also capture when focus leaves phone or name input or problem changes
-  phoneInput.addEventListener("blur", triggerLeadAutoSave);
-  phoneInput.addEventListener("change", triggerLeadAutoSave);
-  if (nameInput) {
-    nameInput.addEventListener("blur", () => {
-      const cleanPhone = (phoneInput.value || "").replace(/[^0-9]/g, '').slice(-10);
-      if (cleanPhone.length === 10) triggerLeadAutoSave();
-    });
-  }
-  if (problemInput) {
-    problemInput.addEventListener("change", () => {
-      const cleanPhone = (phoneInput.value || "").replace(/[^0-9]/g, '').slice(-10);
-      if (cleanPhone.length === 10) triggerLeadAutoSave();
-    });
-  }
-}
-
-// ================= HIGH-SPEED SERVER WARMING (ZERO COLD-START) =================
-function prewarmRazorpayOrder() {
-  // Pings serverless function in background so it's blazing fast on submit
-  fetch('/api/create-order?ping=1').catch(() => {});
 }
 
 // ================= BOOKING MODAL CONTROL =================
-function openBookingModal(defaultProblem = null) {
+function openBookingModal() {
   const modal = document.getElementById("bookingModal");
   if (modal) {
-    if (defaultProblem) {
-      const probSelect = document.getElementById("custProblem");
-      if (probSelect) probSelect.value = defaultProblem;
-    }
     modal.classList.remove("hidden");
     document.body.style.overflow = "hidden";
     modal.scrollTop = 0;
     trackMetaEvent('InitiateCheckout', {
       value: APP_CONFIG.CONSULTATION_AMOUNT,
       currency: APP_CONFIG.CURRENCY,
-      content_name: '₹501 Palmistry & Kundali Consultation'
+      content_name: '₹251 Palmistry & Kundali Consultation'
     });
-    // ⚡ Warm up server function in background while user types
-    prewarmRazorpayOrder();
   }
 }
 
@@ -172,45 +146,14 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeBookingModal();
 });
 
-// ================= SACRED AUDIO VOICE NOTE PREVIEW (ZERO UGLY ALERTS) =================
-function playSampleVoiceNote() {
-  const notice = document.getElementById("audioSampleNotice");
-  const playBtnIcon = document.getElementById("audioPlayIcon");
-
-  if (notice) notice.classList.remove("hidden");
-
-  // Play a soft sacred bell frequency (528Hz) directly in browser
-  try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (AudioCtx) {
-      const audioCtx = new AudioCtx();
-      const osc = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(528, audioCtx.currentTime); // Sacred healing chime
-      gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 3.0);
-      osc.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 3.0);
-    }
-  } catch (e) {}
-
-  if (playBtnIcon) {
-    playBtnIcon.className = "fa-solid fa-volume-high text-emerald-300 animate-bounce";
-    setTimeout(() => {
-      playBtnIcon.className = "fa-solid fa-play text-sm ml-0.5";
-    }, 3500);
-  }
-}
-
-// ================= FORM SUBMISSION & RAZORPAY ₹351 ONE-TIME ORDER =================
-async function handleFormSubmit(event) {
+// ================= FORM SUBMISSION & CLIENT-SIDE RAZORPAY =================
+function handleFormSubmit(event) {
   event.preventDefault();
 
   const name = document.getElementById("custName")?.value.trim() || "";
   const rawPhone = document.getElementById("custPhone")?.value.trim() || "";
+  const email = document.getElementById("custEmail")?.value.trim() || "";
+  const dob = document.getElementById("custDob")?.value || "";
   const problem = document.getElementById("custProblem")?.value || "general_guidance";
 
   if (!name) {
@@ -218,191 +161,177 @@ async function handleFormSubmit(event) {
     return;
   }
 
+  // Clean phone to exact 10 digits (strip +91, 0, spaces, dashes)
   const phone = rawPhone.replace(/[^0-9]/g, '').slice(-10);
   if (!phone || phone.length !== 10) {
     alert("कृपया 10 अंकों का सही व्हाट्सएप नंबर दर्ज करें।");
     return;
   }
 
-  try {
-    localStorage.setItem('astro_lead_501', JSON.stringify({ name, phone, problem, timestamp: Date.now() }));
-  } catch (e) {}
-
-  const payBtn = document.getElementById("payBtn");
-  if (payBtn) {
-    payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> <span>सुरक्षित UPI गेटवे खुल रहा है...</span>';
-    payBtn.disabled = true;
+  if (!email || !email.includes('@')) {
+    alert("कृपया सही ईमेल पता दर्ज करें (Razorpay UPI पेमेंट व रसीद हेतु आवश्यक)।");
+    return;
   }
 
+  const problemMap = {
+    'general_guidance': 'हस्तरेखा का संपूर्ण जीवन मार्गदर्शन',
+    'career_business': 'करियर, नौकरी में तरक्की व व्यापार में रुकावट',
+    'marriage_love': 'विवाह में विलंब, वैवाहिक कलह व प्रेम संबंध',
+    'finance_debt': 'आर्थिक तंगी, बचत न होना व कर्ज की समस्या',
+    'health_family': 'स्वास्थ्य, मानसिक तनाव व पारिवारिक अशांति'
+  };
+  const selectedProblem = problemMap[problem] || 'हस्तरेखा का संपूर्ण जीवन मार्गदर्शन';
+
+  // 1. Meta Pixel InitiateCheckout (₹251)
   trackMetaEvent('InitiateCheckout', {
     value: APP_CONFIG.CONSULTATION_AMOUNT,
     currency: APP_CONFIG.CURRENCY,
-    content_name: '₹501 Palmistry & Kundali Consultation',
+    content_name: '₹251 वैदिक हस्तरेखा विश्लेषण',
     customer_phone: phone,
-    customer_name: name
+    customer_name: name,
+    customer_email: email
   });
 
-  try {
-    // Check if order was already preloaded from auto-save
-    let data = null;
-    if (preloadedOrderData && preloadedOrderData.phone === phone && preloadedOrderData.order_id) {
-      data = {
-        success: true,
-        order_id: preloadedOrderData.order_id,
-        key_id: preloadedOrderData.key_id || APP_CONFIG.RAZORPAY_KEY_ID,
-        amount: preloadedOrderData.amount || 50100,
-        currency: preloadedOrderData.currency || "INR"
-      };
-      console.log("⚡ Using preloaded Razorpay Order for instant popup:", data.order_id);
-    } else {
-      // Creates Razorpay Order with Real Customer Details
-      const response = await fetch('/api/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, problem })
-      });
-      data = await response.json();
-    }
+  const payBtn = document.getElementById("payBtn");
+  if (payBtn) {
+    payBtn.disabled = true;
+    payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> UPI गेटवे खुल रहा है...';
+  }
 
-    if (data.success && data.order_id) {
-      console.log("✅ Razorpay ₹501 Order Ready (Instant):", data.order_id);
-
-      const problemMap = {
-        'marriage_love': 'विवाह में विलंब, वैवाहिक कलह व प्रेम संबंध',
-        'career_business': 'करियर, नौकरी में तरक्की व व्यापार में रुकावट',
-        'finance_debt': 'आर्थिक तंगी, बचत न होना व कर्ज मुक्ति',
-        'health_family': 'स्वास्थ्य, मानसिक तनाव व पारिवारिक अशांति',
-        'general_guidance': 'हस्तरेखा व कुंडली का संपूर्ण जीवन मार्गदर्शन'
-      };
-      const selectedProblem = problemMap[problem] || 'हस्तरेखा व कुंडली विश्लेषण';
-
-      // WhatsApp रीडायरेक्शन लिंक तैयार करें
-      const getWhatsAppUrl = (paymentId) => {
-        const text = `जय श्री राम, मैंने ₹501 की दक्षिणा देकर संपूर्ण हस्तरेखा व कुंडली परामर्श बुक कर लिया है।\n\n📌 *मेरे विवरण:*\n• नाम: ${name}\n• फ़ोन: ${phone}\n• मुख्य विषय: ${selectedProblem}\n• पेमेंट ID: ${paymentId || ''}\n\nकृपया 24 घंटे में मेरी विस्तृत समाधान रिपोर्ट व आचार्य जी का ऑडियो संदेश तैयार करें। यह मेरी दोनों हथेलियों की साफ फोटो है:`;
-        return `https://wa.me/${APP_CONFIG.WHATSAPP_SUPPORT_NUMBER}?text=${encodeURIComponent(text)}`;
-      };
-
-      // Razorpay Standard One-Time Order Options (No AutoPay)
-      const options = {
-        key: data.key_id || APP_CONFIG.RAZORPAY_KEY_ID,
-        amount: data.amount || 50100,
-        currency: data.currency || "INR",
-        name: APP_CONFIG.BUSINESS_NAME,
-        description: "₹501 संपूर्ण हस्तरेखा व कुंडली विश्लेषण (24 घंटे में रिपोर्ट)",
-        image: "https://cdn-icons-png.flaticon.com/512/3663/3663335.png",
-        order_id: data.order_id,
-        prefill: {
-          name: name,
-          contact: phone
-        },
-        theme: {
-          color: "#D97706"
-        },
-        handler: function (resp) {
-          console.log("✅ Payment Successful! Redirecting to WhatsApp...");
-          const paymentId = resp.razorpay_payment_id || resp.razorpay_order_id || ('PAY_' + Date.now());
-
-          // 1. Meta Pixel: Purchase Event Fire (₹501)
-          trackMetaEvent('Purchase', {
-            value: APP_CONFIG.CONSULTATION_AMOUNT,
-            currency: APP_CONFIG.CURRENCY,
-            content_name: '₹501 Palmistry & Kundali Consultation'
-          }, { eventID: paymentId });
-
-          // 2. Server-side Meta Conversions API (CAPI)
-          try {
-            fetch('/api/track-purchase', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                phone: phone,
-                name: name,
-                payment_id: paymentId,
-                value: APP_CONFIG.CONSULTATION_AMOUNT
-              })
-            }).catch(() => {});
-          } catch (e) {}
-
-          // 🚀 सीधे WhatsApp पर ऑटोमैटिक रीडायरेक्ट!
-          window.location.href = getWhatsAppUrl(paymentId);
-        },
-        modal: {
-          ondismiss: function () {
-            preloadedOrderPromise = null;
-            if (payBtn) {
-              payBtn.disabled = false;
-              payBtn.innerHTML = '<i class="fa-solid fa-lock"></i> <span>सुरक्षित भुगतान करें — मात्र ₹501 →</span>';
-            }
-          }
-        }
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.on('payment.failed', function (pErr) {
-        console.warn("Payment notice:", pErr);
-        preloadedOrderPromise = null;
+  // 2. Direct Client-Side Razorpay Standard Checkout (Zero Serverless Dependency)
+  // Amount in Paise: 251 * 100 = 25100 paise (₹251.00 strictly)
+  const options = {
+    key: APP_CONFIG.RAZORPAY_KEY_ID,
+    amount: Math.round(APP_CONFIG.CONSULTATION_AMOUNT * 100), // 25,100 paise = ₹251.00 strictly
+    currency: APP_CONFIG.CURRENCY,
+    name: APP_CONFIG.BUSINESS_NAME,
+    description: "₹251 हस्तरेखा परामर्श (24 घंटे में WhatsApp PDF रिपोर्ट)",
+    image: "https://cdn-icons-png.flaticon.com/512/3663/3663335.png",
+    prefill: {
+      name: name,
+      contact: phone,
+      email: email
+    },
+    notes: {
+      customer_name: name,
+      customer_phone: phone,
+      customer_email: email,
+      date_of_birth: dob || "हस्तरेखा द्वारा विश्लेषण",
+      problem: selectedProblem,
+      hand_rule: "पुरुष: दायाँ हाथ | महिला: बायाँ हाथ"
+    },
+    theme: {
+      color: "#D97706"
+    },
+    modal: {
+      ondismiss: function () {
         if (payBtn) {
           payBtn.disabled = false;
-          payBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> <span>पुनः प्रयास करें — ₹501</span>';
+          payBtn.innerHTML = '<i class="fa-solid fa-lock"></i> <span>सुरक्षित भुगतान करें — मात्र ₹251 →</span>';
         }
-      });
-      rzp.open();
+      }
+    },
+    handler: function (response) {
+      const paymentId = response.razorpay_payment_id || ('PAY_' + Date.now());
+      console.log("✅ Payment Successful! Payment ID:", paymentId);
 
-    } else {
-      throw new Error(data.error || "ऑर्डर नहीं बन सका। कृपया पुनः प्रयास करें।");
+      // TRIPLE DEDUPLICATION GUARD: Prevent duplicate purchase recording on back/refresh
+      const purchaseKey = 'meta_purchase_fired_' + paymentId;
+      const isAlreadyRecorded = localStorage.getItem(purchaseKey) || sessionStorage.getItem(purchaseKey);
+
+      if (!isAlreadyRecorded) {
+        localStorage.setItem(purchaseKey, 'true');
+        sessionStorage.setItem(purchaseKey, 'true');
+
+        // Fire Meta Pixel: Purchase Event (Deduplicated via unique paymentId)
+        trackMetaEvent('Purchase', {
+          value: APP_CONFIG.CONSULTATION_AMOUNT,
+          currency: APP_CONFIG.CURRENCY,
+          content_name: '₹251 वैदिक हस्तरेखा विश्लेषण',
+          content_type: 'product'
+        }, { eventID: paymentId });
+      } else {
+        console.warn("⚠️ Duplicate purchase event suppressed for:", paymentId);
+      }
+
+      // Store Order in LocalStorage
+      try {
+        localStorage.setItem('astro_booking_251', JSON.stringify({
+          name, phone, email, dob: dob || 'उपलब्ध नहीं', problem: selectedProblem, paymentId, amount: 251, timestamp: Date.now()
+        }));
+      } catch (e) {}
+
+      // WhatsApp Redirect URL (Clear instructions: Right hand for male, Left hand for female)
+      const whatsappText = `जय श्री राम, मैंने ₹251 की दक्षिणा देकर हस्तरेखा परामर्श बुक कर लिया है।\n\n📌 *मेरे विवरण:*\n• नाम: ${name}\n• फ़ोन: ${phone}\n• ईमेल: ${email}\n• जन्म तिथि: ${dob || 'ज्ञात नहीं (हस्तरेखा फोटो संलग्न है)'}\n• मुख्य विषय: ${selectedProblem}\n• पेमेंट ID: ${paymentId}\n\nकृपया 24 घंटे में मेरी 6-पेज की विस्तृत समाधान PDF रिपोर्ट WhatsApp पर भेजें।\n(नोट: नियमानुसार पुरुष दायाँ हाथ / महिला बायाँ हाथ की साफ़ फ़ोटो भेज रहे हैं)`;
+
+      const waUrl = `https://wa.me/${APP_CONFIG.WHATSAPP_SUPPORT_NUMBER}?text=${encodeURIComponent(whatsappText)}`;
+
+      // Use location.replace() so pressing back from WhatsApp does not reload the checkout state
+      window.location.replace(waUrl);
     }
+  };
+
+  try {
+    const rzp = new window.Razorpay(options);
+    rzp.on('payment.failed', function (pErr) {
+      console.warn("Payment notice:", pErr);
+      if (payBtn) {
+        payBtn.disabled = false;
+        payBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> <span>पुनः प्रयास करें — मात्र ₹251 →</span>';
+      }
+    });
+    rzp.open();
   } catch (err) {
-    console.error("Order Error:", err);
-    alert("सूचना: " + err.message);
+    console.error("Razorpay Launch Error:", err);
+    alert("Razorpay गेटवे लोड नहीं हो सका। कृपया इंटरनेट कनेक्शन जांचें।");
     if (payBtn) {
-      payBtn.innerHTML = '<i class="fa-solid fa-lock"></i> <span>सुरक्षित भुगतान करें — मात्र ₹501 →</span>';
       payBtn.disabled = false;
+      payBtn.innerHTML = '<i class="fa-solid fa-lock"></i> <span>सुरक्षित भुगतान करें — मात्र ₹251 →</span>';
     }
   }
-}
-
-// ================= LIVE SOCIAL PROOF TICKER =================
-function startLiveProofTicker() {
-  const toast = document.getElementById("liveProofToast");
-  const textEl = document.getElementById("liveProofText");
-  const timeEl = document.getElementById("liveProofTime");
-  if (!toast || !textEl || !timeEl) return;
-
-  const proofs = [
-    { name: "संजय माथुर (जयपुर)", action: "ने ₹501 का परामर्श बुक किया", time: "2 मिनट पहले" },
-    { name: "शालिनी कुलश्रेष्ठ (भोपाल)", action: "ने हस्तरेखा विश्लेषण बुक किया", time: "4 मिनट पहले" },
-    { name: "विकास अग्रवाल (कानपुर)", action: "ने करियर परामर्श बुक किया", time: "7 मिनट पहले" },
-    { name: "रोहित तोमर (इंदौर)", action: "ने कुंडली व हस्तरेखा बुक की", time: "11 मिनट पहले" },
-    { name: "अनिता मिश्रा (लखनऊ)", action: "ने ₹501 परामर्श बुक किया", time: "14 मिनट पहले" },
-    { name: "दीपक शर्मा (दिल्ली)", action: "ने विवाह विलंब समाधान बुक किया", time: "18 मिनट पहले" }
-  ];
-
-  let currentIndex = 0;
-
-  function showNextProof() {
-    const item = proofs[currentIndex];
-    textEl.textContent = `${item.name} ${item.action}`;
-    timeEl.textContent = `${item.time} • सत्यापित जातक`;
-
-    toast.classList.remove("opacity-0", "translate-y-4");
-    toast.classList.add("opacity-100", "translate-y-0");
-
-    setTimeout(() => {
-      toast.classList.remove("opacity-100", "translate-y-0");
-      toast.classList.add("opacity-0", "translate-y-4");
-    }, 4500);
-
-    currentIndex = (currentIndex + 1) % proofs.length;
-  }
-
-  setTimeout(() => {
-    showNextProof();
-    setInterval(showNextProof, 12000);
-  }, 3500);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  initMetaPixel();
   startCountdown();
-  startLiveProofTicker();
-  setupAutoLeadCapture();
+  initPWA();
 });
+
+// ================= PWA 1-CLICK INSTALLATION ENGINE =================
+let deferredPwaPrompt = null;
+
+function initPWA() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log('✅ [PWA] Service Worker active'))
+      .catch((err) => console.log('⚠️ [PWA] SW note:', err));
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPwaPrompt = e;
+    console.log('📱 [PWA] Installation prompt ready.');
+    const floatingBanner = document.getElementById('pwaFloatingBanner');
+    if (floatingBanner) {
+      floatingBanner.style.display = 'flex';
+    }
+  });
+
+  window.addEventListener('appinstalled', () => {
+    console.log('🎉 [PWA] App Installed Successfully!');
+    deferredPwaPrompt = null;
+    const floatingBanner = document.getElementById('pwaFloatingBanner');
+    if (floatingBanner) floatingBanner.style.display = 'none';
+  });
+}
+
+function triggerPWAInstall() {
+  if (deferredPwaPrompt) {
+    deferredPwaPrompt.prompt();
+    deferredPwaPrompt.userChoice.then((choiceResult) => {
+      deferredPwaPrompt = null;
+    });
+  } else {
+    alert("📲 अपने Chrome ब्राउज़र के ऊपर मेनू (⋮) पर टैप करें और 'Install App' या 'Add to Home screen' चुनें।");
+  }
+}

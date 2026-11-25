@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>भुगतान सफल | वैदिक हस्तरेखा एवं ज्योतिष अनुसंधान केंद्र</title>
+  
+  <!-- Google Fonts: Noto Sans Devanagari + Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- ================= META PIXEL CODE WITH DEDUPLICATION ================= -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    
+    fbq('init', '2242280556724298');
+    fbq('track', 'PageView');
+
+    // Extract transaction params
+    const urlParams = new URLSearchParams(window.location.search);
+    const storedLead = JSON.parse(localStorage.getItem('astro_booking_251') || '{}');
+    const paymentId = urlParams.get('razorpay_payment_id') || storedLead.paymentId || ('PAY_' + Date.now());
+    const clientPhone = urlParams.get('phone') || storedLead.phone || '';
+    const clientName = urlParams.get('name') || storedLead.name || '';
+
+    // DEDUPLICATION GUARD: Only fire Purchase if not already recorded
+    const purchaseKey = 'meta_purchase_fired_' + paymentId;
+    if (!localStorage.getItem(purchaseKey) && !sessionStorage.getItem(purchaseKey)) {
+      localStorage.setItem(purchaseKey, 'true');
+      sessionStorage.setItem(purchaseKey, 'true');
+
+      fbq('track', 'Purchase', {
+        value: 251.00,
+        currency: 'INR',
+        content_name: '₹251 वैदिक हस्तरेखा विश्लेषण',
+        content_type: 'product'
+      }, { eventID: paymentId });
+      console.log("✅ [Meta Pixel] Purchase Event Fired (Deduplicated)");
+    } else {
+      console.warn("⚠️ Duplicate Purchase event blocked on Thank You page for:", paymentId);
+    }
+  </script>
+  <!-- ================= END META PIXEL CODE ================= -->
+
+  <style>
+    body {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-[#080511] text-slate-100 min-h-screen flex items-center justify-center p-4">
+
+  <div class="max-w-md w-full bg-gradient-to-b from-[#180f2d] to-[#100720] border-2 border-amber-500/50 rounded-2xl p-6 sm:p-8 text-center shadow-[0_0_50px_rgba(245,158,11,0.35)] relative">
+    
+    <!-- Green Animated Check Icon -->
+    <div class="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-4xl mx-auto mb-5 border-2 border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.5)]">
+      <i class="fa-solid fa-check"></i>
+    </div>
+
+    <!-- Success Message -->
+    <h1 class="text-2xl font-extrabold text-white mb-2">
+      भुगतान सफल रहा! 🎉
+    </h1>
+    <p class="text-xs sm:text-sm text-amber-300 font-medium mb-6">
+      आपका ₹251 का हस्तरेखा परामर्श सफलतापूर्वक बुक हो चुका है।
+    </p>
+
+    <!-- Details Box -->
+    <div class="bg-black/40 border border-amber-500/30 rounded-xl p-4 text-left text-xs space-y-2.5 mb-6">
+      <div class="flex justify-between">
+        <span class="text-slate-400">परामर्श दक्षिणा:</span>
+        <span class="text-emerald-400 font-bold">₹251.00 (सफल)</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-slate-400">पेमेंट आईडी:</span>
+        <span id="displayPayId" class="text-amber-300 font-mono text-[11px]">-</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-slate-400">रिपोर्ट डिलीवरी:</span>
+        <span class="text-slate-200">24 घंटे में WhatsApp पर</span>
+      </div>
+    </div>
+
+    <!-- Photo Guideline Notice -->
+    <div class="p-3 bg-emerald-950/60 border border-emerald-500/40 rounded-xl text-xs text-emerald-200 text-left mb-6 space-y-1">
+      <strong class="text-white block">📌 अगला महत्वपूर्ण कदम:</strong>
+      <p>कृपया WhatsApp पर अपनी हथेली की साफ़ फ़ोटो भेजें:</p>
+      <p class="font-bold text-amber-300">• पुरुष: दायाँ हाथ (Right Hand) | महिला: बायाँ हाथ (Left Hand)</p>
+    </div>
+
+    <!-- WhatsApp Redirect Button -->
+    <a id="waBtn" href="https://wa.me/919116497140" class="block w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-500/30 text-sm transition transform hover:scale-105 flex items-center justify-center gap-2">
+      <i class="fa-brands fa-whatsapp text-lg"></i>
+      <span>WhatsApp पर हथेली की फोटो भेजें →</span>
+    </a>
+
+    <p class="text-[10px] text-slate-400 mt-4">
+      सहायता नंबर: +91 9116497140 • काशी वैदिक पीठ
+    </p>
+
+  </div>
+
+  <script>
+    // Populate Details Dynamically
+    document.getElementById('displayPayId').textContent = paymentId;
+    
+    const waText = `जय श्री राम, मैंने ₹251 की दक्षिणा देकर परामर्श बुक कर लिया है।\n• नाम: ${clientName || 'जातक'}\n• पेमेंट ID: ${paymentId}\nकृपया 24 घंटे में मेरी 6-पेज सचित्र रिपोर्ट भेजें। (हथेली फोटो संलग्न है)`;
+    document.getElementById('waBtn').href = `https://wa.me/919116497140?text=${encodeURIComponent(waText)}`;
+  </script>
+</body>
+</html>
