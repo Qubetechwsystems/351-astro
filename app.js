@@ -8,7 +8,7 @@
 // ================= GLOBAL CONFIGURATION =================
 const APP_CONFIG = {
   RAZORPAY_KEY_ID: "rzp_live_Tof2RpwJEWMNx9", // Live Razorpay Key
-  META_PIXEL_ID: "2242280556724298",
+  META_PIXEL_ID: "1111594184953741",
   CONSULTATION_AMOUNT: 251.00, // एकमुश्त ₹251 शुभ दक्षिणा (No autopay)
   CURRENCY: "INR",
   BUSINESS_NAME: "वैदिक हस्तरेखा एवं ज्योतिष अनुसंधान केंद्र",
@@ -250,6 +250,22 @@ function handleFormSubmit(event) {
           content_name: '₹251 वैदिक हस्तरेखा विश्लेषण',
           content_type: 'product'
         }, { eventID: paymentId });
+
+        // Trigger Server-Side Meta Conversions API (CAPI) with same eventID
+        try {
+          fetch('/api/track-purchase', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              phone: phone,
+              name: name,
+              email: email,
+              payment_id: paymentId,
+              value: APP_CONFIG.CONSULTATION_AMOUNT
+            }),
+            keepalive: true
+          }).catch(() => {});
+        } catch (e) {}
       } else {
         console.warn("⚠️ Duplicate purchase event suppressed for:", paymentId);
       }
