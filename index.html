@@ -30,22 +30,16 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '2242280556724298');
+    fbq('init', '1111594184953741');
     fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=2242280556724298&ev=PageView&noscript=1"
+    src="https://www.facebook.com/tr?id=1111594184953741&ev=PageView&noscript=1"
   /></noscript>
   <!-- End Meta Pixel Code -->
 
-  <!-- PWA Manifest & App Metas -->
-  <link rel="manifest" href="./manifest.json">
+  <!-- App Metas -->
   <meta name="theme-color" content="#F59E0B">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="दिव्य एस्ट्रो">
-  <link rel="apple-touch-icon" href="./icon-192.png">
 
   <style>
     body {
@@ -715,14 +709,13 @@
           <p class="text-[10px] text-amber-200/80 mt-1">📌 6-पेज की PDF रिपोर्ट इसी WhatsApp नंबर पर भेजी जाएगी (कॉल नहीं की जाएगी)।</p>
         </div>
 
-        <!-- Email Address (Required for Razorpay Mobile UPI Intent) -->
+        <!-- Email Address (Optional, auto-generated if skipped) -->
         <div>
           <label class="block text-amber-300 text-xs sm:text-sm font-bold mb-1 flex items-center gap-1.5">
             <i class="fa-solid fa-envelope text-amber-400"></i>
-            <span>यहाँ अपना ईमेल पता लिखें</span>
-            <span class="text-rose-400 font-extrabold">*</span>
+            <span>यहाँ अपना ईमेल पता लिखें (वैकल्पिक)</span>
           </label>
-          <input type="email" id="custEmail" required placeholder="उदा. rahul@gmail.com (पेमेंट सत्यापन व रसीद हेतु)" class="w-full bg-[#080313] border-2 border-amber-500/50 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 text-xs sm:text-sm font-hindi">
+          <input type="email" id="custEmail" placeholder="उदा. rahul@gmail.com (छोड़ भी सकते हैं)" class="w-full bg-[#080313] border-2 border-amber-500/50 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 text-xs sm:text-sm font-hindi">
         </div>
 
         <!-- Optional Birth Date (Zero Friction Helper) -->
@@ -790,25 +783,6 @@
   </div>
 
   <!-- JavaScript Application File with Cache-Buster -->
-  <script src="app.js?v=26.0"></script>
-
-  <!-- PWA & Direct Install Floating Helper -->
-  <div id="pwaFloatingBanner" class="fixed bottom-20 left-3 right-3 sm:left-auto sm:right-6 sm:bottom-6 sm:w-88 max-w-sm bg-[#130926]/95 border-2 border-amber-400/70 p-3.5 rounded-2xl shadow-2xl backdrop-blur-xl z-50 flex items-center justify-between gap-3 transform transition-all duration-300">
-    <div class="flex items-center gap-2.5">
-      <img src="./icon-192.png" alt="दिव्य एस्ट्रो" class="w-10 h-10 rounded-xl border border-amber-400/50 shrink-0">
-      <div>
-        <h5 class="text-xs font-bold text-white leading-tight">दिव्य एस्ट्रो ऐप जोड़ें</h5>
-        <p class="text-[10px] text-amber-300 font-medium">1-टैप में सीधे फ़ोन पर चालू करें</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-1.5 shrink-0">
-      <button onclick="triggerPWAInstall()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-extrabold text-[11px] shadow hover:scale-105 active:scale-95 transition">
-        इंस्टॉल
-      </button>
-      <button onclick="document.getElementById('pwaFloatingBanner').style.display='none'" class="text-slate-400 hover:text-white text-xs px-1.5 py-1">
-        ✕
-      </button>
-    </div>
-  </div>
+  <script src="app.js?v=27.0"></script>
 </body>
 </html>

@@ -152,7 +152,6 @@ function handleFormSubmit(event) {
 
   const name = document.getElementById("custName")?.value.trim() || "";
   const rawPhone = document.getElementById("custPhone")?.value.trim() || "";
-  const email = document.getElementById("custEmail")?.value.trim() || "";
   const dob = document.getElementById("custDob")?.value || "";
   const problem = document.getElementById("custProblem")?.value || "general_guidance";
 
@@ -168,10 +167,9 @@ function handleFormSubmit(event) {
     return;
   }
 
-  if (!email || !email.includes('@')) {
-    alert("कृपया सही ईमेल पता दर्ज करें (Razorpay UPI पेमेंट व रसीद हेतु आवश्यक)।");
-    return;
-  }
+  // Smooth Email: If user provided valid email use it, otherwise auto-generate so UPI is never blocked
+  const inputEmail = document.getElementById("custEmail")?.value.trim() || "";
+  const email = (inputEmail && inputEmail.includes('@')) ? inputEmail : `astro.${phone}@astromargdarshan.online`;
 
   const problemMap = {
     'general_guidance': 'हस्तरेखा का संपूर्ण जीवन मार्गदर्शन',
@@ -310,44 +308,4 @@ function handleFormSubmit(event) {
 document.addEventListener("DOMContentLoaded", () => {
   initMetaPixel();
   startCountdown();
-  initPWA();
 });
-
-// ================= PWA 1-CLICK INSTALLATION ENGINE =================
-let deferredPwaPrompt = null;
-
-function initPWA() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js')
-      .then(() => console.log('✅ [PWA] Service Worker active'))
-      .catch((err) => console.log('⚠️ [PWA] SW note:', err));
-  }
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPwaPrompt = e;
-    console.log('📱 [PWA] Installation prompt ready.');
-    const floatingBanner = document.getElementById('pwaFloatingBanner');
-    if (floatingBanner) {
-      floatingBanner.style.display = 'flex';
-    }
-  });
-
-  window.addEventListener('appinstalled', () => {
-    console.log('🎉 [PWA] App Installed Successfully!');
-    deferredPwaPrompt = null;
-    const floatingBanner = document.getElementById('pwaFloatingBanner');
-    if (floatingBanner) floatingBanner.style.display = 'none';
-  });
-}
-
-function triggerPWAInstall() {
-  if (deferredPwaPrompt) {
-    deferredPwaPrompt.prompt();
-    deferredPwaPrompt.userChoice.then((choiceResult) => {
-      deferredPwaPrompt = null;
-    });
-  } else {
-    alert("📲 अपने Chrome ब्राउज़र के ऊपर मेनू (⋮) पर टैप करें और 'Install App' या 'Add to Home screen' चुनें।");
-  }
-}
